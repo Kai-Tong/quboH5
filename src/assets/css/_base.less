@@ -1,0 +1,54 @@
+.van-button {
+    width: 598px;
+    height: 93px;
+    margin: 30px auto;
+    border-radius: 10px;
+    font-size: 32px;
+    border: 0;
+    display: block;
+    &.van-button--primary {
+        color: #7B2600;
+        background: @primary-bg;
+    }
+}
+
+.base-icon {
+    position: relative;
+    font-weight: 500;
+    &::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        width: 100%;
+        height: 100%;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+    }
+}
+
+.avatar {
+    border-radius: 50%;
+    overflow: hidden;
+    display: block;
+    margin: auto;
+}
+.text-warp2 {
+    overflow: hidden; 
+    text-overflow: ellipsis;
+    display: -webkit-box; 
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2; 
+}
+
+.text-overflow {
+    // .text-warp2();
+    // -webkit-line-clamp: 1; 
+    // white-space: nowrap;
+    // width: 710px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+

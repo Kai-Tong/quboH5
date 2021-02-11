@@ -1,0 +1,52 @@
+<template>
+<div>
+    <Header />
+    <div class="agree-content">
+        <p>请你务必审慎阅读、充分理解协议中相关条款内容，特别是粗体标注的内容。你一旦注册xx，即视为你已了解并完全同意本协议各项内容，包括Score对使用协议随时所做的任何修改。如你不同意本协议及/或随时对其的修改，请你立即停止注册及使用Score所提供的全部服务。</p>
+    
+        <p>1、接受条款</p>
+        <span>xx产品的运营者及相关关联公司（以下简称“xx”）根据本使用协议的条款及不时发布的规则为你提供基于Score产品账号（包括xx 网页端、xx相关客户端、WE俱乐部、iG俱乐部、OMG俱乐部、LNG俱乐部、滔搏电竞、天霸电竞等）的互联网服务。本协议的条款可由xx随时修改，修改后的使用协议在网站上一经公布即有效代替原来的使用协议。你一旦在xx产品注册，即成为xx用户（以下简称“用户”或“你”），并受本协议的约束。</span>
+
+        <p>2、服务说明</p>
+        <span>xx产品的运营者及相关关联公司（以下简称“xx”）根据本使用协议的条款及不时发布的规则为你提供基于Score产品账号（包括xx网页端、xx相关客户端、WE俱乐部、iG俱乐部、OMG俱乐部、LNG俱乐部、滔搏电竞、天霸电竞等）的互联网服务。本协议的条款可由xx随时修改，修改后的使用协议在网站上一经公布即有效代替原来的使用协议。你一旦在xx产品注册，即成为xx用户（以下简称“用户”或“你”），并受本协议的约束。</span>
+
+        <p>3、你的注册协议</p>
+        <span>xx产品的运营者及相关关联公司（以下简称“xx”）根据本使用协议的条款及不时发布的规则为你提供基于Score产品账号（包括xx网页端、xx相关客户端、WE俱乐部、iG俱乐部、OMG俱乐部、LNG俱乐部、滔搏电竞、天霸电竞等）的互联网服务。本协议的条款可由xx随时修改，修改后的使用协议在网站上一经公布即有效代替原来的使用协议。你一旦在xx产品注册，即成为xx用户（以下简称“用户”或“你”），并受本协议的约束。</span>
+    </div>
+</div>
+    
+</template>
+
+<script>
+import Header from '@/components/common/header'
+export default {
+    name: 'Agreement',
+    components: {
+        Header
+    },
+    data() {
+        return {
+            active: 1
+        }
+    },
+    methods: {
+    },
+}
+</script>
+
+<style scoped lang="less">
+.agree-content {
+    margin: 40px auto;
+    width: 710px;
+    font-size: 26px;
+    text-align: left;
+    p {
+        color: rgb(51,51,51);
+        font-weight: bold;
+        margin-top: 30px;
+    }
+    span {
+
+    }
+}
+</style>

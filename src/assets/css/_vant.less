@@ -1,0 +1,57 @@
+@border-color: #d8d8d8;
+@primary-bg: linear-gradient(#FAE46B, #FCC340);
+@btn-color: #7B2600;
+@danger-color: rgb(255,0,0);
+
+.van-tabs {
+    .van-tabs__wrap {
+        height: 60px;
+        .van-tab {
+            height: 60px;
+        }
+    }
+}
+
+.van-cell {
+    padding: 1rem;
+    line-height: 40px;
+    .van-cell__title {
+        text-align: left;
+        padding-left: .5rem;
+        font-size: 30px;
+        height: 42px;
+    }
+    &::after {
+        border-bottom: 2px solid @border-color;
+    }
+    .van-cell__right-icon {
+      margin-top: 10px;
+    }
+    .van-field__control {
+        padding-left: 20px;
+        font-size: 30px;
+        &::placeholder {
+          color: rgb(122,122,122);
+        }
+    }
+}
+
+.van-tabs__wrap {
+  .van-tab {
+      height: 100px;
+  }
+  .van-tab__text--ellipsis {
+      height: 100px;
+      line-height: 100px;
+  }
+  .van-tab--active {
+      color: rgb(255,201,76);
+  }
+  .van-tabs__line {
+      background-color: rgb(255,201,76);
+  }
+}
+.van-toast--html, .van-toast--text{
+    padding: 15px;
+    box-sizing: border-box;
+}
