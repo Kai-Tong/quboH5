@@ -3,6 +3,7 @@
     <searchHeader
       :fatherindex="searchMenuClick"
       @childIndex="getChildIndex"
+      @childKeywords="getChildKeywords"
     ></searchHeader>
     <div class="searchMenu">
       <div
@@ -14,7 +15,10 @@
         {{ item.name }}
       </div>
     </div>
-    <component :is="searchComponent"></component>
+    <component
+      :is="searchComponent"
+      :fatherkeywords="fatherkeywords"
+    ></component>
   </div>
 </template>
 
@@ -42,6 +46,7 @@ export default {
         },
       ],
       searchMenuClick: 0,
+      fatherkeywords: "",
     };
   },
   methods: {
@@ -64,9 +69,12 @@ export default {
       //接受子组件传过来的值
       this.searchMenuList.map((item, index) => {
         if (item.name == name) {
-            this.changeSearchMenu(index)
+          this.changeSearchMenu(index);
         }
       });
+    },
+    getChildKeywords(keywords) {
+      this.fatherkeywords = keywords;
     },
   },
   created() {},
@@ -74,7 +82,7 @@ export default {
     searchHeader,
     Searchnews,
     searchPost,
-    searchUser
+    searchUser,
   },
 };
 </script>

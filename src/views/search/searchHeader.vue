@@ -79,6 +79,7 @@ export default {
     gotosearch() {
       // 搜索查询
       this.storage();
+      this.$emit('childKeywords',this.searchkeywordk)
     },
     storage() {
       let KW = localStorage.getItem("searchHistory");
