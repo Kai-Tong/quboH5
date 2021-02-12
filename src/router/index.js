@@ -188,6 +188,11 @@ Vue.use(VueRouter)
     name: 'Search',
     component: () => import(/* webpackChunkName: "about" */ '../views/search/search.vue')
   },
+  {
+    path: '/searchresult',
+    name: 'Searchresult',
+    component: () => import(/* webpackChunkName: "about" */ '../views/search/searchResult.vue')
+  },
 
 ]
 

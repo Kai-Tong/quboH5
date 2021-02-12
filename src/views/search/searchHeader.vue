@@ -47,6 +47,7 @@
 
 <script>
 export default {
+  props: ['fatherindex'],
   data() {
     return {
       backimg: require("../../assets/img/search/back@2x.png"),
@@ -55,7 +56,7 @@ export default {
       searchType: "资讯",
       searchTypeList: [
         {
-          name: "咨询",
+          name: "资讯",
           type: 1,
         },
         {
@@ -104,10 +105,25 @@ export default {
       //切换搜索类型
       this.showsearchtyoeList = false;
       this.searchType = type.name;
+      this.$emit('childIndex',type.name)
     },
   },
   created() {
     this.historyList = JSON.parse(localStorage.getItem("searchHistory"));
+  },
+  computed: {
+    fatherindexfn() {
+      return this.fatherindex;
+    },
+  },
+  watch: {
+    fatherindexfn(newValue) {
+        this.searchTypeList.map((item,index)=>{
+          if(index == newValue){
+           this.searchType =  item.name
+          }
+        })
+    }
   },
 };
 </script>
