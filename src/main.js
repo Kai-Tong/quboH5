@@ -30,6 +30,11 @@ Vue.use(VueQuillEditor, /* { default global options } */)
 
 Vue.config.productionTip = false
 
+import * as filter from './assets/filter/index'
+Object.keys(filter).forEach(keys => {
+  Vue.filter(keys, filter[keys])
+})
+
 new Vue({
   router,
   store,
