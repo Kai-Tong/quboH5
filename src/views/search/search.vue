@@ -46,7 +46,11 @@
     </div>
     <div class="history_record">
       <div>历史搜索</div>
-      <img src="" alt="" />
+      <img
+        src="../../assets/img/search/dele.png"
+        alt=""
+        @click="deleteHistory()"
+      />
     </div>
     <div class="history_data cl">
       <div v-for="(item, index) in historyList" :key="index + item">
@@ -83,6 +87,10 @@ export default {
     };
   },
   methods: {
+    deleteHistory() {
+      //删除历史搜索记录
+      localStorage.removeItem("searchHistory")
+    },
     gotosearch() {
       // 搜索查询
       this.storage();
@@ -211,6 +219,7 @@ export default {
     font-size: 24px;
     padding: 14px 28px;
     margin-right: 10px;
+    margin-top: 10px;
     border-radius: 26px;
   }
 }
