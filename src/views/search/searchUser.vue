@@ -15,7 +15,10 @@
       <div class="name">
         {{ item.user_nickname }}
       </div>
-      <div :class="item.is_followed == 0 ? 'is_followed1' : 'is_followed12'">
+      <div
+        :class="item.is_followed == 0 ? 'is_followed1' : 'is_followed12'"
+        @click="user_follow(item)"
+      >
         {{ item.is_followed == 0 ? "关注" : "已关注" }}
       </div>
     </div>
@@ -37,6 +40,27 @@ export default {
     };
   },
   methods: {
+    user_follow(item) {
+      //关注
+      //关注用户
+      let type = 1;
+      if (item.is_followed == 0) {
+        type = 1;
+      } else {
+        type = 2;
+      }
+      let url1 = `${this.$api.httppost.follow()}/${type}/${item.id}`;
+      console.log(url1);
+      this.$axios({
+        method: "post",
+        url: url1,
+      }).then((res) => {
+        let { code } = res.data;
+        if (code == 0) {
+          this.searchdata();
+        }
+      });
+    },
     gotoNews() {
       //跳转新闻详情页面
     },
