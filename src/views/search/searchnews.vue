@@ -101,7 +101,7 @@ export default {
   .searchnews_left {
     width: 475px;
     .searchnews_title {
-      font-size: 22px;
+      font-size: 28px;
     }
   }
   .searchnews_xinxi {

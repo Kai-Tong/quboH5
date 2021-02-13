@@ -26,10 +26,16 @@ let money = value => {
       let s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
       return Y + M + D + h + m + s;
   }
+  let filterTag = value =>{
+   let data1 =  value.replace(/<\/?.+?>/g,"");
+   let data2 = data1.replace(/ /g,"");
+   return data2
+  }
   export {
     money,
     Thousands,
-    formDate
+    formDate,
+    filterTag
   }
   
   
