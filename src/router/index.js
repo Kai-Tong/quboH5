@@ -172,11 +172,6 @@ Vue.use(VueRouter)
     meta: {
         title: '用户协议'
     }
-},
-  {
-    path: '/about',
-    name: 'About',
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
     path: '/about',

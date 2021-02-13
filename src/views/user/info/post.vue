@@ -2,6 +2,9 @@
 <div>
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
         <ul class="userinfo-post-content">
+            <div class="noarticle" v-if="articleList.length == 0">
+                暂未发帖
+            </div>
             <li
                 v-for="(item, index) in articleList"
                 :key="index"
@@ -77,10 +80,11 @@ export default {
   },
   mounted(){
       this.getaAticle()
+      console.log(this.$route.params.user_uid);
   }
 }
 </script>
-<style lang="less" scope>
+<style lang="less" scoped>
 .userinfo-post-content {
     text-align: left;
     color: #7c7c7c;
@@ -115,6 +119,11 @@ export default {
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
         }
+    }
+    .noarticle{
+        color: #fff;
+        text-align: center;
+        margin-top: 25px;
     }
 }
 </style>

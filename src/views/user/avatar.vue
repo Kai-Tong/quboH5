@@ -28,7 +28,7 @@
                     :key="key"
                     @click="current=item.userPic;currentIndex=key"
                 ><img :src="item.userPic" alt=""></span>
-                <van-uploader :after-read="afterRead" />
+                <van-uploader accept="image/*" :max-count="1" :after-read="afterRead" />
             </div>
         </div>
         <!-- <van-button @click="submitHandle" type="primary">提  交</van-button> -->

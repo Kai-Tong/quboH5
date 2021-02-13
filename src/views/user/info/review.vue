@@ -55,6 +55,7 @@
                 </div>
             </dd>
         </dl>
+        
     </div>
 </template>
 
@@ -63,9 +64,14 @@ export default {
   name: 'UserInfoReview',
   data () {
     return {
+        
     }
   },
   methods: {
+      
+  },
+  mounted(){
+      
   }
 }
 </script>
