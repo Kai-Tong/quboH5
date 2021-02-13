@@ -77,7 +77,16 @@ export default {
       this.fatherkeywords = keywords;
     },
   },
-  created() {},
+  created() {
+    let searchtype = sessionStorage.getItem("searchtype")
+    let searchinput=  sessionStorage.getItem("searchinput")
+    if(searchtype!=null && searchtype.length>0){
+        this.changeSearchMenu(searchtype)
+        if(searchinput!=null && searchinput.length>0){
+          this.getChildKeywords(searchinput)
+        }
+    }
+  },
   components: {
     searchHeader,
     Searchnews,
