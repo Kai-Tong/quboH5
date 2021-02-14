@@ -39,7 +39,7 @@
         </ul>
 
         <Post v-if="navActive === 1" />
-        <Review v-else-if="navActive === 2" />
+        <Review v-else-if="navActive === 2" :userpic="profile.user_pic" />
         <Follow v-else-if="navActive === 3" />
         <Base v-else :userid = "userid" />
     </div>

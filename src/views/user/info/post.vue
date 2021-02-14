@@ -15,6 +15,9 @@
                 <div class="post_detail" v-html="item.forum_body">
 
                 </div>
+                <div class="article_img" v-if="item.imgList.length != 0">
+                    <img :src="imgsrc" alt="" v-for="(imgsrc,index) in item.imgList" :key="index">
+                </div>
             </li>        
         </ul>
     </van-pull-refresh>
@@ -56,7 +59,7 @@ export default {
                             return dataList[i].push(capture);
                         })
                         this.$set(receiveList[i],'imgList',
-                            dataList[i].slice(-4)
+                            dataList[i].slice(-3)
                         )
                         receiveList[i].forum_body = receiveList[i].forum_body.replace(/<[^>]+>/g, '')
                     }
@@ -118,6 +121,21 @@ export default {
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
+        }
+        .article_img{
+            width: 100%;
+            height: 120px;
+            margin: auto;
+        }
+        .article_img img{
+            width: 32%;
+            height: 120px;
+            float: left;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        .article_img img:last-child{
+            margin-right: 0;
         }
     }
     .noarticle{

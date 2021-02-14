@@ -1,57 +1,30 @@
 <template>
     <div class="userinfo-review-content">
         <dl>
-            <dt>评论（共1256条）</dt>
+            <dt>评论（共{{commentlist.length}}条）</dt>
             <dd>
-                <div>
+                <div v-for="(item,index) in commentlist" :key="index" @click="toPostDetail(item)">
                     <van-row>
                         <van-col span="3">
-                            <img class="avatar" src="" alt="">
+                            <img class="avatar" :src="userpic || current" alt="">
                         </van-col>
                         <van-col span="17">
-                            <p class="name">电竞迷糊大王</p>
-                            <span class="time">昨天14：20</span>
+                            <!-- <p class="name">电竞迷糊大王</p> -->
+                            <span class="time">{{item.c_addtime}}</span>
+                            <span class="time">-来自：{{item.forum_title}}</span>
                         </van-col>
                         <van-col span="4">
-                            <em class="like">1234</em>
+                            <van-icon class="goodjob" name="good-job" />
+                            <em class="like">{{item.c_good_count}}</em>
                         </van-col>
                     </van-row>
                     <div class="reviews">
-                        <p>支开一张浪漫的网，定理支持</p>
-                    </div>
-                </div><div>
-                    <van-row>
-                        <van-col span="3">
-                            <img class="avatar" src="" alt="">
-                        </van-col>
-                        <van-col span="17">
-                            <p class="name">电竞迷糊大王</p>
-                            <span class="time">昨天14：20</span>
-                        </van-col>
-                        <van-col span="4">
-                            <em class="like">1234</em>
-                        </van-col>
-                    </van-row>
-                    <div class="reviews">
-                        <p>支开一张浪漫的网，定理支持</p>
+                        <p>{{item.c_body}}</p>
                     </div>
                 </div>
-                <div>
-                    <van-row>
-                        <van-col span="3">
-                            <img class="avatar" src="" alt="">
-                        </van-col>
-                        <van-col span="17">
-                            <p class="name">电竞迷糊大王</p>
-                            <span class="time">昨天14：20</span>
-                        </van-col>
-                        <van-col span="4">
-                            <em class="like">1234</em>
-                        </van-col>
-                    </van-row>
-                    <div class="reviews">
-                        <p>支开一张浪漫的网，定理支持</p>
-                    </div>
+                <van-loading type="spinner" class="load" v-if="loading" />
+                <div class="noarticle" v-if="commentlist.length == 0">
+                    暂无评论
                 </div>
             </dd>
         </dl>
@@ -64,14 +37,60 @@ export default {
   name: 'UserInfoReview',
   data () {
     return {
-        
+        current:"https://img01.yzcdn.cn/vant/tree.jpg",
+        loading:false,
+        commentlist:[]
     }
   },
+  props:["userpic"],
   methods: {
-      
+    toPostDetail(){
+        window.location.href = this.JuheHOST+ '/forum/' + item.ch_columnm_key + '/' + item.ch_key + '/' + item.forum_id + '.html'
+    },
+    //时间转换
+    dateFormat(date) {
+        var date = new Date(date * 1000);
+        var Y = date.getFullYear() + '-';
+        var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+        var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+        var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+        var m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+        var s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
+        return Y + M + D + h + m + s;
+    },
+    getCommentList(){
+        this.loading = true;
+        this.$axios({
+            url:`${this.$api.commentlist}/${this.$route.params.user_uid}`,
+            method: "get",
+            timeout: 3000
+        })
+        .then(res => {
+            console.log(res);
+            if (res.data.code == 1) {
+                this.$toast({
+                    message: res.data.msg
+                }); 
+            } else if (res.data.code == 0) {
+                for(var index in res.data.params){
+                    res.data.params[index].c_addtime = this.dateFormat(res.data.params[index].c_addtime)
+                }
+                this.commentlist = res.data.params;
+                this.loading = false;
+            } else if (res.data.code == -1) {
+                this.$toast({
+                    message: '身份验证过期，请重新登录'
+                });
+                // window.location.href = this.JuheHOST
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        });
+    }
   },
   mounted(){
-      
+      this.getCommentList()
   }
 }
 </script>
@@ -82,6 +101,7 @@ export default {
     height: calc(100% - 560px);
     overflow-y: auto;
     padding-top: 20px;
+    box-sizing: border-box;
     dl {
         dt {
             color: rgb(201,177,123);
@@ -112,6 +132,8 @@ export default {
                 color: rgb(1,70,129);
                 font-style: normal;
                 font-size: 24px;
+                position: relative;
+                top: -5px;
             }
             .time {
                 color: rgb(160,160,160);
@@ -121,6 +143,17 @@ export default {
                 color: #fff;
                 padding-left: 90px;
                 margin-top: 10px;
+            }
+            .goodjob{
+                color: rgb(1,70,129);
+            }
+            .noarticle{
+                color: #fff;
+                text-align: center;
+            }
+            .load{
+                width: 30px;
+                margin: auto;
             }
         }
     }

@@ -93,18 +93,16 @@ export default {
     // 如果需要手动控制数据同步，父组件需要显式地处理changed事件
     methods: {
       addEmoji(e) {
+        this.editor.focus();
         // this.content = this.content + e.native;
         let length = this.editor.selection.savedRange.index;
         console.log(length);
         this.editor.insertText(length,e.native)
         this.showemoji = false;
-        // this.editor.insertText(5, 'Quill', {
-        //   'color': '#ffff00',
-        //   'italic': true
-        // });
-        // this.editor.setSelection(length + 1);
-        // console.log(length);
         
+        // console.log(this.editor.getSelection(focus = true));
+        // let length1 = this.editor.getSelection(focus = true).index;
+        // this.editor.setSelection(length1);   
       },
       onEditorBlur(quill) {
         console.log('editor blur!', quill)
@@ -153,6 +151,10 @@ export default {
     },
     mounted() {
       this.getChanelList();
+      // this.$nextTick(function() {
+      //   this.$refs.myQuillEditor.quill.enable(true);
+      //   this.$refs.myQuillEditor.quill.blur();
+      // });
       console.log('this is current quill instance object', this.editor)
     }
   }
