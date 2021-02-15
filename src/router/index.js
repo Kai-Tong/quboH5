@@ -178,15 +178,20 @@ Vue.use(VueRouter)
     name: 'About',
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
-  {
+  {//搜索历史
     path: '/search',
     name: 'Search',
     component: () => import(/* webpackChunkName: "about" */ '../views/search/search.vue')
   },
-  {
+  {//搜索结果
     path: '/searchresult',
     name: 'Searchresult',
     component: () => import(/* webpackChunkName: "about" */ '../views/search/searchResult.vue')
+  },
+  {//关注圈子
+    path: '/attention',
+    name: 'Attention',
+    component: () => import(/* webpackChunkName: "about" */ '../views/attention/attention.vue')
   },
 
 ]
