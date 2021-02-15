@@ -1,5 +1,5 @@
 <template>
-  <div class="searchnews">
+  <div class="searchnews" ref="searchnews">
     <div
       class="searchnews_data"
       v-for="(item, index) in searchList"
@@ -37,6 +37,7 @@ export default {
     return {
       keywords: "",
       page: 1,
+      pagesize: 0,
       searchList: [],
       imgList: {
         plimg: require("../../assets/img/search/pl.png"),
@@ -44,7 +45,7 @@ export default {
     };
   },
   methods: {
-    gotoNews(){
+    gotoNews() {
       //跳转新闻详情页面
     },
     searchdata() {
@@ -60,16 +61,21 @@ export default {
           let { code, msg, params } = res.data;
           let { data, pagination } = params;
           if (code == 0) {
-            this.searchList = data;
-            console.log(data);
+            let { page_size, total } = pagination;
+            let pagesize = Math.ceil(total / page_size);
+            this.pagesize = pagesize;
+            if (this.page == 1) {
+              this.searchList = data;
+            } else {
+              let List = this.searchList;
+              let pipi = List.concat(data);
+              this.searchList = pipi;
+            }
           } else {
             this.$toast({
               message: msg,
             });
           }
-          // let { page_size, total } = pagination;
-          // this.page_size = page_size;
-          // this.totalArtcle = total;
         });
     },
   },
@@ -86,6 +92,31 @@ export default {
   },
   created() {
     this.searchdata();
+  },
+  mounted() {
+    let _this = this;
+    window.onscroll = function () {
+      //变量scrollTop是滚动条滚动时，距离顶部的距离
+      var scrollTop =
+        document.documentElement.scrollTop || document.body.scrollTop;
+      //变量windowHeight是可视区的高度
+      var windowHeight =
+        document.documentElement.clientHeight || document.body.clientHeight;
+      //变量scrollHeight是滚动条的总高度
+      var scrollHeight =
+        document.documentElement.scrollHeight || document.body.scrollHeight;
+      //滚动条到底部的条件
+      if (scrollTop + windowHeight == scrollHeight) {
+        if (_this.pagesize > _this.page) {
+          _this.page += 1;
+          _this.searchdata();
+        } else {
+          _this.$toast({
+            message: "这是全部的内容",
+          });
+        }
+      }
+    };
   },
 };
 </script>
