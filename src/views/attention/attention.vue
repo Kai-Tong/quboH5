@@ -1,7 +1,7 @@
 <template>
   <div class="attention">
     <div class="attention_header">
-      <img src="../../assets/img/search/back@2x.png" alt="" />
+      <img src="../../assets/img/search/back@2x.png" alt="" @click="gotoback()"/>
       选择关注圈子
     </div>
     <div class="attention_menu_div">
@@ -24,7 +24,7 @@
         v-for="(item, index) in DataList_del"
         :key="index"
         class="left attention_del"
-        @click="addguanzhu(item, $event)"
+        @click="addguanzhu(item, index, $event)"
       >
         <div class="centerimg">
           <img :src="item.ch_logo" alt="" />
@@ -36,6 +36,7 @@
           src="../../assets/img/search/select@2x.png"
           alt=""
           class="selectimg"
+          v-show="item.haveF"
         />
       </div>
     </div>
@@ -56,17 +57,18 @@ export default {
     };
   },
   methods: {
-    addguanzhu(item, e) {
-      if (this.addFollowed.indexOf(item.id) != -1) {
-        e.path[2].children[2].style.display = "none";
-        this.addFollowed.splice(this.addFollowed.indexOf(item.id), 1);
-      } else {
-        e.path[2].children[2].style.display = "block";
+    addguanzhu(item, index, e) {
+      let DataList = this.DataList_del[index];
+      if (this.addFollowed.indexOf(item.id) == -1) {
         this.addFollowed.push(item.id);
+        DataList.haveF = true;
+      } else {
+        this.addFollowed.splice(this.addFollowed.indexOf(item.id), 1);
+        DataList.haveF = false;
       }
-      console.log(this.addFollowed);
+      this.$set(this.DataList_del, index, DataList);
     },
-    saveguanzhu() {
+    saveguanzhu() {//保存关注
       let qiqi = this.addFollowed.toString();
       this.$api.editchanel
         .editerchanel({
@@ -76,7 +78,7 @@ export default {
         .then((res) => {
           let { code, msg, params } = res.data;
           if (code == 0) {
-            console.log(params);
+            this.getfollow()
             this.$toast({
               message: "关注成功",
             });
@@ -91,14 +93,16 @@ export default {
       //切换关注列表
       this.menuSl = index;
       let xixi = (index + 1) * 1;
-      this.DataList_del = this.DataList[xixi];
-    },
-    hasfollowed() {
-      //是否关注
-
-      for (let i = 0; i < this.DataList_del.length; i++) {
-        this.DataList_del[i] == this.followed[i];
+      let pipi = this.DataList[xixi];
+      for (let i = 0; i < pipi.length; i++) {
+        pipi[i].haveF = false;
+        for (let j = 0; j < this.addFollowed.length; j++) {
+          if (pipi[i].id == this.addFollowed[j]) {
+            pipi[i].haveF = true;
+          }
+        }
       }
+      this.DataList_del = pipi;
     },
     gotoback() {
       //返回上一级
@@ -111,6 +115,7 @@ export default {
         let { code, msg, params } = res.data;
         if (code == 0) {
           let { channel, user_followed_id } = params;
+          this.addFollowed = user_followed_id;
           this.followed = user_followed_id;
           let arr = Object.keys(channel);
           let arrayList = [];
@@ -127,6 +132,13 @@ export default {
           });
         }
       });
+    },
+  },
+  watch: {
+    menuSl(newValue) {
+      console.log(newValue);
+      console.log(this.addFollowed, this.followed);
+      this.addFollowed = this.followed;
     },
   },
   created() {
@@ -196,7 +208,6 @@ export default {
     height: 34px;
     top: -5px;
     right: 25px;
-    display: none;
   }
   .ch_name {
     font-size: 22px;
