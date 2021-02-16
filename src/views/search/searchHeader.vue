@@ -80,6 +80,7 @@ export default {
       // 搜索查询
       this.storage();
       this.$emit('childKeywords',this.searchkeywordk)
+      this.$router.push('/searchresult')
     },
     storage() {
       let KW = localStorage.getItem("searchHistory");

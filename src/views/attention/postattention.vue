@@ -1,44 +1,36 @@
 <template>
-  <div class="search_header">
-    <div class="centerimg" @click="gotoback()">
-      <img :src="backimg" alt="" class="back_img" />
+  <div class="attention">
+    <div class="attention_header">
+      <img src="../../assets/img/search/back@2x.png" alt="" @click="gotoback()"/>
+      选择圈子
     </div>
-    <div class="search_header_div">
-      <div class="search_input_div">
-        <div class="searchtype">
-          <div>
-            {{ searchType }}
-          </div>
-          <img
-            src="../../assets/img/search/down@2x.png"
-            alt=""
-            class="seledown"
-            @click="showsearch()"
-          />
-        </div>
-        <input
-          type="text"
-          maxlength="20"
-          placeholder="请输入关键字"
-          v-model="searchkeywordk"
-          class="search_input"
-        />
-        <div class="centerimg">
-          <img
-            :src="searchimg"
-            alt=""
-            class="search_img"
-            @click="gotosearch()"
-          />
-        </div>
+    <div class="attention_menu_div">
+      <div
+        v-for="(item, index) in menuList"
+        :key="index"
+        :class="
+          index == menuSl ? 'attention_menu attention_menu1' : 'attention_menu'
+        "
+        @click="changeMenu(index)"
+      >
+        {{ item }}
       </div>
-      <div class="search_sele" v-show="showsearchtyoeList">
-        <div
-          v-for="(item, index) in searchTypeList"
-          :key="index"
-          @click="changeSearchType(item)"
-        >
-          {{ item.name }}
+    </div>
+    <div class="attention_menu_bottom">
+      {{ menuList[menuSl] }}
+    </div>
+    <div class="cl attention_del_div">
+      <div
+        v-for="(item, index) in DataList_del"
+        :key="index"
+        class="left attention_del"
+        @click="addguanzhu(item, index, $event)"
+      >
+        <div class="centerimg">
+          <img :src="item.ch_logo" alt="" />
+        </div>
+        <div class="ch_name">
+          {{ item.ch_name }}
         </div>
       </div>
     </div>
@@ -47,154 +39,155 @@
 
 <script>
 export default {
-  props: ['fatherindex'],
   data() {
     return {
-      backimg: require("../../assets/img/search/back@2x.png"),
-      searchimg: require("../../assets/img/search/search2@2x.png"),
-      searchkeywordk: "",
-      searchType: "资讯",
-      searchTypeList: [
-        {
-          name: "资讯",
-          type: 1,
-        },
-        {
-          name: "贴子",
-          type: 2,
-        },
-        {
-          name: "用户",
-          type: 3,
-        },
-      ],
-      showsearchtyoeList: false,
+      menuList: [],
+      menuSl: 0,
+      DataList: {},
+      DataList_del: [],
+      followed: [],
+      addFollowed: [],
     };
   },
   methods: {
+    addguanzhu(item, index, e) {
+        sessionStorage.setItem("postcirid",item.id)
+        sessionStorage.setItem("postcir",item.ch_name)
+        this.gotoback()
+    },
+    changeMenu(index) {
+      //切换关注列表
+      this.menuSl = index;
+      let xixi = (index + 1) * 1;
+      let pipi = this.DataList[xixi];
+      this.DataList_del = pipi;
+    },
     gotoback() {
-      //返回上一个页面
+      //返回上一级
       window.history.go(-1);
     },
-    gotosearch() {
-      // 搜索查询
-      this.storage();
-      this.$emit('childKeywords',this.searchkeywordk)
-      this.$router.push('/searchresult')
-    },
-    storage() {
-      let KW = localStorage.getItem("searchHistory");
-      let KWdata = [];
-      if (this.searchkeywordk != "" && this.searchkeywordk.length > 0) {
-        //   console.log(KW.length)
-        if (KW != null && KW.length > 0) {
-          KWdata = JSON.parse(KW);
-          KWdata.unshift(this.searchkeywordk);
-          this.historyList = KWdata;
-          localStorage.setItem("searchHistory", JSON.stringify(KWdata));
+    getfollow() {
+      //获得关注社区列表
+      let params = { type: 3 };
+      this.$api.attchanelist.attchanel(params).then((res) => {
+        let { code, msg, params } = res.data;
+        if (code == 0) {
+          let { channel, user_followed_id } = params;
+          this.addFollowed = user_followed_id;
+          this.followed = user_followed_id;
+          let arr = Object.keys(channel);
+          let arrayList = [];
+          for (let i = 1; i <= arr.length; i++) {
+            //切换的类别
+            arrayList.push(channel[i][0].ch_columnm_name);
+          }
+          this.menuList = arrayList;
+          this.DataList = channel;
+          this.changeMenu(0);
         } else {
-          KWdata.push(this.searchkeywordk);
-          this.historyList = KWdata;
-          localStorage.setItem("searchHistory", JSON.stringify(KWdata));
+          this.$toast({
+            message: msg,
+          });
         }
-      }
-    },
-    showsearch() {
-      //显示搜索类型
-      this.showsearchtyoeList = !this.showsearchtyoeList;
-    },
-    changeSearchType(type) {
-      //切换搜索类型
-      this.showsearchtyoeList = false;
-      this.searchType = type.name;
-      this.$emit('childIndex',type.name)
-    },
-  },
-  created() {
-    this.historyList = JSON.parse(localStorage.getItem("searchHistory"));
-  },
-  computed: {
-    fatherindexfn() {
-      return this.fatherindex;
+      });
     },
   },
   watch: {
-    fatherindexfn(newValue) {
-        this.searchTypeList.map((item,index)=>{
-          if(index == newValue){
-           this.searchType =  item.name
-          }
-        })
-    }
+    menuSl(newValue) {
+      console.log(newValue);
+      console.log(this.addFollowed, this.followed);
+      this.addFollowed = this.followed;
+    },
+  },
+  created() {
+    this.getfollow();
   },
 };
 </script>
 
 <style lang="less" scoped>
 @import url("../../assets/css/commonuse");
-.search_sele {
-  position: absolute;
-  top: 50px;
-  left: 20px;
-  color: #fff;
-  font-size: 18px;
-  background-color: #666;
-  div {
-    padding: 5px 10px;
-    border: 1px solid #999;
-  }
-}
-.search_header {
+.attention_header {
+  background-color: #505050;
+  height: 88px;
   display: flex;
   align-items: center;
-  height: 88px;
-  background-color: #505050;
-  .back_img {
+  justify-content: center;
+  padding: 0 29px;
+  text-align: center;
+  position: relative;
+  color: #fff;
+  img {
     width: 30px;
     height: 28px;
-    margin: 0 30px;
+    position: absolute;
+    left: 29px;
+    top: 0;
+    bottom: 0;
+    margin: auto;
   }
-  .search_header_div {
-    display: flex;
-    align-items: center;
-    margin-left: 25px;
-    position: relative;
+}
+.attention_menu_div {
+  display: flex;
+  align-items: center;
+  overflow-x: scroll;
+  margin: 0 28px;
+  font-size: 24px;
+  .attention_menu {
+    width: 124px;
+    color: #6a6a6a;
+    border-bottom: #dcdcdc 1px solid;
+    text-align: center;
+    height: 56px;
+    line-height: 56px;
+    margin-right: 7px;
   }
-  .search_img {
-    width: 46px;
-    height: 46px;
+  .attention_menu1 {
+    color: #fca321;
+    border-bottom: 2px solid #ffa21f;
   }
-  .search_input_div {
-    display: flex;
-    align-items: center;
-    color: #fff;
-    border: 1px solid #666;
-    height: 58px;
-    padding: 0 27px;
-    border-radius: 27px;
-    background-color: #6a6a6a;
+}
+.attention_menu_bottom {
+  margin: 30px 57px;
+}
+
+.attention_del {
+  width: 25%;
+  text-align: center;
+  position: relative;
+  img {
+    margin-top: 13px;
+    width: 100px;
+    height: 100px;
   }
-  .searchtype {
-    display: flex;
-    align-items: center;
-    border-right: 1px solid #fff;
-    font-size: 18px;
+  .selectimg {
+    position: absolute;
+    width: 34px;
+    height: 34px;
+    top: -5px;
+    right: 25px;
   }
-  .search_input {
-    color: #fff;
-    background: transparent;
-    border: none;
-    margin-left: 10px;
-    font-size: 20px;
+  .ch_name {
+    font-size: 22px;
+    height: 52px;
+    line-height: 52px;
   }
-  .search_input input::-webkit-input-placeholder {
-    color: #c6c6c6;
-    font-size: 12px;
-  }
-  .seledown {
-    width: 21px;
-    height: 12px;
-    margin: 0 10px;
-  }
+}
+.attention_del_div {
+  padding-bottom: 170px;
+}
+.keepbtn {
+  background-color: #fee67c;
+  color: #642806;
+  height: 90px;
+  line-height: 90px;
+  width: 580px;
+  text-align: center;
+  border-radius: 10px;
+  position: fixed;
+  bottom: 58px;
+  left: 0;
+  right: 0;
+  margin: auto;
 }
 </style>

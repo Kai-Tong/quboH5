@@ -1,6 +1,9 @@
 <template>
   <div id="search">
-    <searchHeader></searchHeader>
+    <searchHeader
+      @childIndex="getChildIndex"
+      @childKeywords="getChildKeywords"
+    ></searchHeader>
     <div class="history_record cl">
       <div class="left">历史搜索</div>
       <img
@@ -34,9 +37,20 @@ export default {
     historySearch() {
       //历史记录搜索
     },
+    getChildIndex(name) {
+      //接受子组件传过来的值
+      this.searchMenuList.map((item, index) => {
+        if (item.name == name) {
+          this.changeSearchMenu(index);
+        }
+      });
+    },
     deleteHistory() {
       //删除历史搜索记录
       localStorage.removeItem("searchHistory");
+    },
+    getChildKeywords(keywords) {
+      this.fatherkeywords = keywords;
     },
   },
   components: {
@@ -44,6 +58,14 @@ export default {
   },
   created() {
     this.historyList = JSON.parse(localStorage.getItem("searchHistory"));
+    let searchtype = sessionStorage.getItem("searchtype");
+    let searchinput = sessionStorage.getItem("searchinput");
+    if (searchtype != null && searchtype.length > 0) {
+      this.changeSearchMenu(searchtype);
+      if (searchinput != null && searchinput.length > 0) {
+        this.getChildKeywords(searchinput);
+      }
+    }
   },
 };
 </script>
