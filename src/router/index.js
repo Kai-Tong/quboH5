@@ -193,6 +193,11 @@ Vue.use(VueRouter)
     name: 'Attention',
     component: () => import(/* webpackChunkName: "about" */ '../views/attention/attention.vue')
   },
+  {//发帖选择圈子
+    path: '/postattention',
+    name: 'PostAttention',
+    component: () => import(/* webpackChunkName: "about" */ '../views/attention/postattention.vue')
+  },
 
 ]
 
