@@ -173,6 +173,41 @@ Vue.use(VueRouter)
         title: '用户协议'
     }
   },
+  //在线客服
+  {
+    path: '/online',
+    name: 'Online',
+    components: {
+        default: () => import(/* webpackChunkName: "Online" */ '../views/other/onlineService')
+    },
+    meta: {
+        title: '在线客服'
+        // noLogin: true
+    }
+  },
+  //问题
+  {
+    path: '/problem',
+    name: 'Problem',
+    components: {
+        default: () => import(/* webpackChunkName: "Problem" */ '../views/other/problem')
+    },
+    meta: {
+        title: '常见问题'
+        // noLogin: true
+    }
+  }, 
+  {
+    path: '/problemdetail',
+    name: 'problemdetail',
+    components: {
+        default: () => import(/* webpackChunkName: "ProblemDetail" */ '../views/other/problemDetail')
+    },
+    meta: {
+        title: ''
+        // noLogin: true
+    }
+  }, 
   {
     path: '/about',
     name: 'About',

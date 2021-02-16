@@ -29,6 +29,9 @@
         @ready="onEditorReady($event)"
         @change="onEditorChange($event)">
       </quill-editor>
+      <van-uploader v-show="false" :afterRead="afterRead" :beforeRead="beforeRead">
+        <van-button icon="photo" type="primary">上传图片</van-button>
+      </van-uploader>
     </div>
   
     <picker
@@ -54,6 +57,7 @@ export default {
   },
     data () {
       return {
+        token:localStorage.getItem("h5token"),
         showemoji:false,
         emoji: require('../assets/img/user/bq@2x.png'),
         content: "",
@@ -69,22 +73,37 @@ export default {
         editorOption: {
           // some quill options
           modules: {
-            toolbar:  [
-              // ['bold', 'italic', 'underline', 'strike'],        // 加粗，斜体，下划线，删除线
-              // ['blockquote', 'code-block'],                      //引用，代码块
-              // [{ 'header': 1 }, { 'header': 2 }],               // 几级标题
-              // [{ 'list': 'ordered'}, { 'list': 'bullet' }],     // 有序列表，无序列表
-              // [{ 'script': 'sub'}, { 'script': 'super' }],      // 下角标，上角标
-              // [{ 'indent': '-1'}, { 'indent': '+1' }],          // 缩进
-              // [{ 'direction': 'rtl' }],                         // 文字输入方向
-              // [{ 'size': ['small', false, 'large', 'huge'] }],  // 字体大小
-              // [{ 'header': [1, 2, 3, 4, 5, 6, false] }],// 标题
-              // [{ 'color': [] }, { 'background': [] }],          // 颜色选择
-              // [{ 'font': [] }],// 字体
-              // [{ 'align': [] }], // 居中
-              // ['clean'],// 清除样式
-              ['link', 'image', 'video'],
-            ]
+            toolbar: {
+              container: [
+              // ["bold", "italic", "underline", "strike"], //切换按钮  //bold 加粗 italic 斜 underline 下划线 strike删除线
+              // ["blockquote", "code-block"], //blockquote 引用 code-block 代码块
+              // ["link", "image"], //图片 link 链接  image图片
+              // [{ header: 1 }, { header: 2 }], // 标题，键值对的形式；1、2表示字体大小
+              // [{ list: "ordered" }, { list: "bullet" }], //排序 ordered 有序  bullet 无序
+              // // [{ header: [1, 2, 3, 4, 5, 6, false] }], //几级标题
+              // [{ script: "sub" }, { script: "super" }], // sub上标 / super下标
+              // [{ indent: "-1" }, { indent: "+1" }], // 减少缩进/缩进
+              // [{ direction: "rtl" }], // 文本方向
+              // [{ color: [] }, { background: [] }], // color 字体颜色 background 背景颜色  从主题默认下拉
+              // [{ align: [] }], //文本对齐方式
+              // [{ font: [] }], //字体格式
+              // [{ size: [] }] // 自定义下拉
+                ['link', 'image', 'video'],
+              ],
+              handlers: {
+                image: value => {
+                  if (value) {
+                    //禁止软键盘弹出
+                    document.activeElement.blur();
+                    // 触发input框选择图片文件
+                    console.log("自定义的上传");
+                    document.querySelector(".van-uploader input").click();
+                  } else {
+                    this.quill.format("image", false);
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -122,7 +141,64 @@ export default {
         this.show = false;
         this.fieldValue = selectedOptions.map((option) => option.label).join('/');
         console.log(this.fieldValue);
-        },
+      },
+      //图片上传成功
+      afterRead(file) {
+        console.log("上传成功", file);
+      },
+      //图片上传前
+      beforeRead(file) {
+        console.log("上传前", file, file.size / 1024);
+        if (file.size == 0) {
+          return false
+        }
+        if (!/^image\/(jpeg|png|jpg)$/.test(file.type)) {
+          this.$toast("请上传 jpg,jpeg,png 格式图片");
+          return false;
+        }
+
+        this.$toast.allowMultiple();
+        let loading = this.$toast.loading({
+          duration: 0,
+          mask: false,
+          forbidClick: true,
+          message: "上传中..."
+        });
+        let formData = new FormData();
+        formData.append("file[]", file);
+        this.$axios({
+            url:this.$api.upimg,
+            method:'post',
+            data:formData,
+            headers: {
+                'mediaType': 'multipart/form-data',
+                'token' :this.token
+            },
+            timeout:3000
+        })
+        .then(res => {
+            console.log(res);
+            // formData = null;
+            // formData = new FormData();
+            // this.$refs.upload.clearFiles(); 
+            if (res.data.code == 1) {
+
+            } else if (res.status == 200) {
+              // 获取光标所在位置
+              let length = this.editor.getSelection().index;
+              // // 插入图片
+              this.editor.insertEmbed(length, "image", res.data.data[0]);
+              // // 调整光标到最后
+              this.editor.setSelection(length + 1);
+              loading.clear();
+            } else if (res.data.code == -1) {
+
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        })
+      },
       // 获取频道列表
       getChanelList() {
         this.$api.getformatechanel

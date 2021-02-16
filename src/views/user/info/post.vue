@@ -39,6 +39,7 @@ export default {
             this.$toast('刷新成功');
             this.isLoading = false;
         }, 1000);
+        this.getaAticle()
     },
     //新的帖子
         getaAticle(){
