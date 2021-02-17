@@ -209,9 +209,13 @@ Vue.use(VueRouter)
     }
   }, 
   {
-    path: '/about',
-    name: 'About',
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: '/publish',
+    name: 'publish',
+    meta: {
+      title: '发表帖子'
+      // noLogin: true
+    },
+    component: () => import(/* webpackChunkName: "about" */ '../views/publish.vue')
   },
   {//搜索历史
     path: '/search',
