@@ -1,6 +1,7 @@
 <template>
   <div class="about">
-    <van-field
+    <Header />
+    <!-- <van-field
         v-model="fieldValue"
         is-link
         readonly
@@ -17,7 +18,29 @@
             @close="show = false"
             @finish="onFinish"
         />
-    </van-popup>
+    </van-popup> -->
+    <van-field
+      v-model="postattention"
+      rows="1"
+      autosize
+      label="发帖频道"
+      placeholder="请选择发帖频道"
+      right-icon="arrow"
+      readonly
+      @click="topostattention"
+    />
+    <van-field
+      v-model="title"
+      rows="1"
+      autosize
+      label="标题"
+      type="textarea"
+      maxlength="35"
+      placeholder="请输入标题最多35个字"
+    />
+    <div>
+        <video class="videosrc" :src="video_src" controls="controls" v-if="video_src"></video>
+    </div>
     <!-- bidirectional data binding（双向数据绑定） -->
     <div class="editor_con">
       <div class="emojidiv"><img :src="emoji" alt="" @click="showemoji = !showemoji"></div>
@@ -29,19 +52,36 @@
         @ready="onEditorReady($event)"
         @change="onEditorChange($event)">
       </quill-editor>
-      <van-uploader v-show="false" :afterRead="afterRead" :beforeRead="beforeRead">
-        <van-button icon="photo" type="primary">上传图片</van-button>
-      </van-uploader>
+      <div class="imgup" v-show="false" >
+        <van-uploader :afterRead="afterRead" :beforeRead="beforeRead">
+          <van-button icon="photo" type="primary">上传图片</van-button>
+        </van-uploader>
+      </div>
+      <div class="videoup" v-show="false" >
+        <van-uploader :afterRead="afterReadvideo" accept="video/*" :beforeRead="beforeReadvideo">
+          <van-button icon="photo" type="primary">上传视频</van-button>
+        </van-uploader>
+      </div>
+      
     </div>
   
     <picker
       :include="['people']"
+      class="biaoqing"
       :showSearch="false"
       :showPreview="false" 
       :showCategories="false"
       @select="addEmoji"
       v-show="showemoji"
     />
+    <div class="btn_group">
+      <div>
+        <button class="canclebtn" @click="clearEditor">取消</button>
+      </div>
+      <div>
+        <button class="submitbtn" @click="publishPost">发布</button>
+      </div>
+    </div>
   <!-- Or manually control the data synchronization（或手动控制数据流） -->
   <!-- <quill-editor :content="content"
                 :options="editorOption"
@@ -50,14 +90,18 @@
   </div>
 </template>
 <script>
+import Header from '@/components/common/header'
 import { Picker } from "emoji-mart-vue";
 export default {
   components: {
-    Picker
+    Picker,
+    Header
   },
     data () {
       return {
         token:localStorage.getItem("h5token"),
+        postattention:'',
+        title:'',
         showemoji:false,
         emoji: require('../assets/img/user/bq@2x.png'),
         content: "",
@@ -70,7 +114,10 @@ export default {
         options: [
         ],
         content: '',
+        video_src:'',
         editorOption: {
+          placeholder:"请输入帖子内容~",
+          theme: 'snow',
           // some quill options
           modules: {
             toolbar: {
@@ -96,12 +143,23 @@ export default {
                     //禁止软键盘弹出
                     document.activeElement.blur();
                     // 触发input框选择图片文件
-                    console.log("自定义的上传");
-                    document.querySelector(".van-uploader input").click();
+                    console.log("自定义的上传图片");
+                    document.querySelector(".imgup .van-uploader input").click();
                   } else {
                     this.quill.format("image", false);
                   }
-                }
+                },
+                video: value => {
+                  if (value) {
+                    //禁止软键盘弹出
+                    document.activeElement.blur();
+                    // 触发input框选择图片文件
+                    console.log("自定义的上传视频");
+                    document.querySelector(".videoup .van-uploader input").click();
+                  } else {
+                    this.quill.format("video", false);
+                  }
+                },
               }
             }
           }
@@ -111,17 +169,16 @@ export default {
     // manually control the data synchronization
     // 如果需要手动控制数据同步，父组件需要显式地处理changed事件
     methods: {
+      topostattention(){
+        this.$router.push('/postattention')
+      },
       addEmoji(e) {
         this.editor.focus();
         // this.content = this.content + e.native;
         let length = this.editor.selection.savedRange.index;
         console.log(length);
         this.editor.insertText(length,e.native)
-        this.showemoji = false;
-        
-        // console.log(this.editor.getSelection(focus = true));
-        // let length1 = this.editor.getSelection(focus = true).index;
-        // this.editor.setSelection(length1);   
+        this.showemoji = false;  
       },
       onEditorBlur(quill) {
         console.log('editor blur!', quill)
@@ -134,13 +191,70 @@ export default {
       },
       onEditorChange({ quill, html, text }) {
         console.log('editor change!', quill, html, text)
-        // this.content = html
+        this.content = html
       },
       onFinish({ selectedOptions }) {
         console.log(this.cascaderValue);
         this.show = false;
         this.fieldValue = selectedOptions.map((option) => option.label).join('/');
         console.log(this.fieldValue);
+      },
+      //视频上传成功
+      afterReadvideo(file){
+        console.log("上传成功", file);
+      },
+      // 视频上传前
+      beforeReadvideo(file){
+        const isLt10M = file.size / 1024 / 1024  < 10;
+        if (['video/mp4', 'video/ogg', 'video/flv','video/avi','video/wmv','video/rmvb'].indexOf(file.type) == -1) {
+            this.$toast('请上传正确的视频格式');
+            return false;
+        }
+        if (!isLt10M) {
+            this.$toast('上传视频大小不能超过10MB哦!');
+            return false;
+        }
+        let loading = this.$toast.loading({
+          duration: 0,
+          mask: false,
+          forbidClick: true,
+          message: "上传中..."
+        });
+        let formData = new FormData();
+        formData.append("file[]", file);
+        this.$axios({
+            url:this.$api.upimg,
+            method:'post',
+            data:formData,
+            headers: {
+                'mediaType': 'multipart/form-data',
+                'token' :this.token
+            },
+            timeout:3000
+        })
+        .then(res => {
+            console.log(res);
+            // formData = null;
+            // formData = new FormData();
+            // this.$refs.upload.clearFiles(); 
+            if (res.data.code == 1) {
+
+            } else if (res.status == 200) {
+              this.video_src = res.data.data[0];
+              // // 获取光标所在位置
+              // let length = this.editor.getSelection().index;
+              // // // 插入视频
+              // this.editor.insertEmbed(length, "video", res.data.data[0]);
+              // // // 调整光标到最后
+              // this.editor.setSelection(length + 1);
+              loading.clear();
+            } else if (res.data.code == -1) {
+
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        })
       },
       //图片上传成功
       afterRead(file) {
@@ -156,8 +270,6 @@ export default {
           this.$toast("请上传 jpg,jpeg,png 格式图片");
           return false;
         }
-
-        this.$toast.allowMultiple();
         let loading = this.$toast.loading({
           duration: 0,
           mask: false,
@@ -199,44 +311,71 @@ export default {
             console.log(error);
         })
       },
-      // 获取频道列表
-      getChanelList() {
-        this.$api.getformatechanel
-            .getChanel()
+      //发布帖子
+      publishPost() {
+      // 通过代码获取编辑器内容
+        if (this.postattention && this.title) {
+          let data = this.content;
+          this.$api.publish
+            .publishPost({
+              forum_title: this.$inHTMLData(this.title),
+              channel: sessionStorage.getItem('postcirid'),
+              body: data,
+              video:this.video_src
+            })
             .then((res) => {
-            console.log(res);
-            if (res.data.code == 1) {
-            } else if (res.data.code == 0) {
-                // this.options = res.data.params;
-                for (let i in res.data.params[2].children) {
-                this.options.push(res.data.params[2].children[i]);
-                }
-            } else if (res.data.code == -1) {
- 
-            }
+              console.log(res);
+              if (res.data.code == 1) {
+               
+              } else if (res.data.code == 0) {
+                this.$toast("发布成功");
+                //清空编辑器
+                this.clearEditor()
+                this.title = ''
+                this.video_src = ''
+              } else if (res.data.code == -1) {
+                
+                // window.location.href = this.JuheHOST
+              }
             })
             .catch((error) => {
-            
+              this.$toast("服务链接超时，请稍后重试");
             });
-        },
+        } else {
+          this.$toast({
+            message: "频道和标题不能为空",
+          });
+        }
+      },
+      // 清空编辑器
+      clearEditor(){
+        this.content = ''
+      }
     },
     computed: {
       editor() {
         return this.$refs.myQuillEditor.quill
       }
     },
+    created(){
+      if(sessionStorage.getItem('postcir')){
+        this.postattention = sessionStorage.getItem('postcir')
+      }
+    },
     mounted() {
-      this.getChanelList();
       // this.$nextTick(function() {
       //   this.$refs.myQuillEditor.quill.enable(true);
       //   this.$refs.myQuillEditor.quill.blur();
       // });
-      console.log('this is current quill instance object', this.editor)
+      console.log(this.editor)
     }
   }
 
 </script>
 <style lang="less" scoped>
+.about{
+  position: relative;
+}
 .ql-snow .ql-tooltip[data-mode=link]::before {
     content: "输入链接：";
 }
@@ -271,15 +410,51 @@ export default {
   width: 20px;
   height: 20px;
   position: absolute;
-  left: 100px;
-  top: 10px;
+  left: 125px;
+  top: 11px;
   img{
     width: 100%;
     height: 100%;
   }
 }
+.btn_group{
+  width: 700px;
+  height: 100px;
+  margin: auto;
+  margin-top: 50px;
+  div{
+    width: 350px;
+    height: 100%;
+    float: left;
+    .canclebtn{
+      width: 330px;
+      height: 100%;
+      border: none;
+      color: #80807F;
+      background-image: linear-gradient(to bottom, #DCDBDC, #BBB9BA);
+      margin-right: 40px;
+      border-radius: 10px;
+    }
+    .submitbtn{
+      width: 330px;
+      height: 100%;
+      border: none;
+      color: #6F360C;
+      background-image: linear-gradient(to bottom, #FDE67C, #F2BD42);
+      border-radius: 10px;
+    }
+  }
+}
+.videosrc{
+  width: 100%;
+  height: 250px;
+  margin: auto;
+}
 </style>
 <style>
+.ql-editor{
+  height: 800px;
+}
 .ql-snow .ql-tooltip[data-mode=link]::before {
     content: "输入链接：";
 }
@@ -288,4 +463,26 @@ export default {
     content: '保存';
     padding-right: 0;
 }
+.ql-snow .ql-tooltip::before {
+    content: "访问 URL:";
+}
+.ql-snow .ql-tooltip a.ql-action::after {
+    content: '编辑';
+}
+.ql-snow .ql-tooltip a.ql-remove::before {
+    content: '删除';
+}
+.ql-snow.ql-toolbar button, .ql-snow .ql-toolbar button{
+  padding: 0;
+  margin-right: 10px;
+}
+.emoji-mart{
+  height: 300px !important;
+  position: absolute !important;
+  bottom: 650px !important;
+}
+/* .biaoqing{
+  position: absolute;
+  top: 197px;
+} */
 </style>

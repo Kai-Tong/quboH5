@@ -64,7 +64,7 @@ export default {
     },
     gotoback() {
       //返回上一级
-      window.history.go(-1);
+      this.$router.push('/publish')
     },
     getfollow() {
       //获得关注社区列表
