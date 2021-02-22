@@ -1,7 +1,6 @@
 <template>
   <div id="search">
     <searchHeader
-      @childIndex="getChildIndex"
       @childKeywords="getChildKeywords"
     ></searchHeader>
     <div class="history_record cl">
@@ -37,14 +36,14 @@ export default {
     historySearch() {
       //历史记录搜索
     },
-    getChildIndex(name) {
-      //接受子组件传过来的值
-      this.searchMenuList.map((item, index) => {
-        if (item.name == name) {
-          this.changeSearchMenu(index);
-        }
-      });
-    },
+    // getChildIndex(name) {
+    //   //接受子组件传过来的值
+    //   this.searchMenuList.map((item, index) => {
+    //     if (item.name == name) {
+          
+    //     }
+    //   });
+    // },
     deleteHistory() {
       //删除历史搜索记录
       localStorage.removeItem("searchHistory");
@@ -61,7 +60,7 @@ export default {
     let searchtype = sessionStorage.getItem("searchtype");
     let searchinput = sessionStorage.getItem("searchinput");
     if (searchtype != null && searchtype.length > 0) {
-      this.changeSearchMenu(searchtype);
+      
       if (searchinput != null && searchinput.length > 0) {
         this.getChildKeywords(searchinput);
       }

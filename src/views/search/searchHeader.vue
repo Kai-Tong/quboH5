@@ -36,7 +36,7 @@
         <div
           v-for="(item, index) in searchTypeList"
           :key="index"
-          @click="changeSearchType(item)"
+          @click="changeSearchType(item,index)"
         >
           {{ item.name }}
         </div>
@@ -47,7 +47,7 @@
 
 <script>
 export default {
-  props: ['fatherindex'],
+  props: ["fatherindex"],
   data() {
     return {
       backimg: require("../../assets/img/search/back@2x.png"),
@@ -79,8 +79,8 @@ export default {
     gotosearch() {
       // 搜索查询
       this.storage();
-      this.$emit('childKeywords',this.searchkeywordk)
-      this.$router.push('/searchresult')
+      this.$emit("childKeywords", this.searchkeywordk);
+      this.$router.push("/searchresult");
     },
     storage() {
       let KW = localStorage.getItem("searchHistory");
@@ -103,15 +103,29 @@ export default {
       //显示搜索类型
       this.showsearchtyoeList = !this.showsearchtyoeList;
     },
-    changeSearchType(type) {
+    changeSearchType(type,index) {
       //切换搜索类型
       this.showsearchtyoeList = false;
       this.searchType = type.name;
-      this.$emit('childIndex',type.name)
+      this.$emit("childIndex", type.name);
+      sessionStorage.setItem("searchtype",index);
     },
   },
   created() {
     this.historyList = JSON.parse(localStorage.getItem("searchHistory"));
+    let searchtype = sessionStorage.getItem("searchtype");
+    let searchinput = sessionStorage.getItem("searchinput");
+    if (searchtype != null && searchtype.length > 0) {
+      this.searchTypeList.map((item, index) => {
+        if (index == searchtype) {
+          this.searchType = item.name;
+        }
+      });
+
+      if (searchinput != null && searchinput.length > 0) {
+        this.searchkeywordk = searchinput;
+      }
+    }
   },
   computed: {
     fatherindexfn() {
@@ -120,12 +134,12 @@ export default {
   },
   watch: {
     fatherindexfn(newValue) {
-        this.searchTypeList.map((item,index)=>{
-          if(index == newValue){
-           this.searchType =  item.name
-          }
-        })
-    }
+      this.searchTypeList.map((item, index) => {
+        if (index == newValue) {
+          this.searchType = item.name;
+        }
+      });
+    },
   },
 };
 </script>
