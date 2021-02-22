@@ -38,16 +38,16 @@
                     <span class="custom-title">关于我们</span>
                 </template>
             </van-cell>
-            <van-cell @click="gouser">
+            <van-cell is-link url="/online">
                 <template #title>
                     <img class="list-icon" src="../../assets/img/user/zxkf-icon@2x.png" alt="">
                     <span class="custom-title">在线客服</span>
                 </template>
             </van-cell>
-            <van-cell is-link value="V.V.1-2.0">
+            <van-cell is-link @click="gouser">
                 <template #title>
                     <img class="list-icon" src="../../assets/img/user/bbxx-icon@2x.png" alt="">
-                    <span class="custom-title">版本信息</span>
+                    <span class="custom-title">个人中心</span>
                 </template>
             </van-cell>
         </van-cell-group>
@@ -88,9 +88,9 @@ export default {
             localStorage.setItem("user_uid", "");
             localStorage.setItem("user_pic", "");
             localStorage.setItem("user_info", "");
-            this.$router.push("/login");
+            window.location.href = this.JuheHOST
           } else if (res.data.code == -1) {
-            // this.$router.push("/");
+            window.location.href = this.JuheHOST
           }
         })
         .catch((error) => {
@@ -119,7 +119,7 @@ export default {
             this.avatar = res.data.params.user_pic
             this.username = res.data.params.user_name
         } else if (res.data.code == -1) {
-        // this.$router.push("/");
+            window.location.href = this.JuheHOST
         }
     })
     .catch((error) => {

@@ -316,13 +316,23 @@ export default {
       // 通过代码获取编辑器内容
         if (this.postattention && this.title) {
           let data = this.content;
-          this.$api.publish
-            .publishPost({
+          let params = {}
+          if(this.video_src){
+            params = {
               forum_title: this.$inHTMLData(this.title),
               channel: sessionStorage.getItem('postcirid'),
               body: data,
               video:this.video_src
-            })
+            }
+          }else{
+            params = {
+              forum_title: this.$inHTMLData(this.title),
+              channel: sessionStorage.getItem('postcirid'),
+              body: data
+            }
+          }
+          this.$api.publish
+            .publishPost(params)
             .then((res) => {
               console.log(res);
               if (res.data.code == 1) {
@@ -335,7 +345,7 @@ export default {
                 this.video_src = ''
               } else if (res.data.code == -1) {
                 
-                // window.location.href = this.JuheHOST
+                window.location.href = this.JuheHOST
               }
             })
             .catch((error) => {

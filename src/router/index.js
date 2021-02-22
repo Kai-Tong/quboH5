@@ -4,20 +4,16 @@ import Home from '../views/Home.vue'
 Vue.use(VueRouter)
 
   const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
+  // {
+  //   path: '/',
+  //   name: 'Home',
+  //   component: Home
+  // },
   {
     path: '/login',
     name: 'Login',
     components: {
         default: () => import(/* webpackChunkName: "Login" */ '../views/user/login.vue')
-    },
-    meta: {
-        // title: '安全中心'
-        noLogin: true
     }
   }, 
   {
@@ -25,9 +21,6 @@ Vue.use(VueRouter)
       name: 'Register',
       components: {
           default: () => import(/* webpackChunkName: "Register" */ '../views/user/register.vue')
-      },
-      meta: {
-          noLogin: true
       }
   },
   //找回密码
@@ -49,7 +42,7 @@ Vue.use(VueRouter)
           default: () => import(/* webpackChunkName: "Register" */ '../views/user/mine.vue')
       },
       meta: {
-          noLogin: true
+        requireAuth: true
       }
   },
   // 修改头像
@@ -60,7 +53,7 @@ Vue.use(VueRouter)
         default: () => import(/* webpackChunkName: "Avatar" */ '../views/user/avatar.vue')
     },
     meta: {
-
+      requireAuth: true
     }
   },
   // 基本信息
@@ -71,7 +64,8 @@ Vue.use(VueRouter)
         default: () => import(/* webpackChunkName: "Base" */ '../views/safe/base.vue')
     },
     meta: {
-        title: '基本资料'
+        title: '基本资料',
+        requireAuth: true
     }
   },
   //安全中心
@@ -82,8 +76,8 @@ Vue.use(VueRouter)
         default: () => import(/* webpackChunkName: "Safe" */ '../views/safe/index')
     },
     meta: {
-        title: '安全中心'
-        // noLogin: true
+        title: '安全中心',
+        requireAuth: true
     }
   },
   //修改密码
@@ -94,7 +88,8 @@ Vue.use(VueRouter)
         default: () => import(/* webpackChunkName: "Pwd" */ '../views/safe/password')
     },
     meta: {
-        title: '登录密码'
+        title: '登录密码',
+        requireAuth: true
     }
   },
   //修改手机
@@ -105,7 +100,8 @@ Vue.use(VueRouter)
         default: () => import(/* webpackChunkName: "ModifyPhone" */ '../views/safe/modifyPhone')
     },
     meta: {
-        title: '修改手机'
+        title: '修改手机',
+        requireAuth: true
     }
   },
   //修改邮箱
@@ -116,7 +112,8 @@ Vue.use(VueRouter)
         default: () => import(/* webpackChunkName: "Email" */ '../views/safe/email')
     },
     meta: {
-        title: '邮箱验证'
+        title: '邮箱验证',
+        requireAuth: true
     }
   },
   //
@@ -127,7 +124,8 @@ Vue.use(VueRouter)
         default: () => import(/* webpackChunkName: "Auth" */ '../views/safe/auth')
     },
     meta: {
-        title: '身份验证'
+        title: '身份验证',
+        requireAuth: true
     }
   },
   {
@@ -137,7 +135,8 @@ Vue.use(VueRouter)
         default: () => import(/* webpackChunkName: "Auth" */ '../views/safe/privacyset')
     },
     meta: {
-        title: '隐私设置'
+        title: '隐私设置',
+        requireAuth: true
     }
   },
   //个人主页
@@ -148,7 +147,7 @@ Vue.use(VueRouter)
         default: () => import(/* webpackChunkName: "UserInfo" */ '../views/user/info/index.vue')
     },
     meta: {
-        noLogin: true
+      requireAuth: true
     }
   },
   //关于我们
@@ -212,8 +211,8 @@ Vue.use(VueRouter)
     path: '/publish',
     name: 'publish',
     meta: {
-      title: '发表帖子'
-      // noLogin: true
+      title: '发表帖子',
+      requireAuth: true
     },
     component: () => import(/* webpackChunkName: "about" */ '../views/publish.vue')
   },
@@ -242,6 +241,7 @@ Vue.use(VueRouter)
 
 const router = new VueRouter({
   mode: 'history',
+  base: '/user/',
   routes
 })
 

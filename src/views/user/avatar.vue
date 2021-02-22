@@ -92,7 +92,7 @@ export default {
                  this.userpic = res.data.params.user_pic;
                  localStorage.setItem("user_pic", res.data.params.user_pic);
                 } else if (res.data.code == -1) {
-
+                    window.location.href = this.JuheHOST
                 }
             })
             .catch(error => {

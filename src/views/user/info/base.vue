@@ -52,7 +52,7 @@ export default {
                 this.$toast({
                     message: '身份验证过期，请重新登录' ,
                 });
-                // window.location.href = this.JuheHOST
+                window.location.href = this.JuheHOST
             }
         })
         .catch(error => {

@@ -73,7 +73,7 @@ export default {
                 this.$toast({
                   message: res.data.msg
                 });
-                // window.location.href = this.JuheHOST
+                window.location.href = this.JuheHOST
             }
         })
         .catch(error => {

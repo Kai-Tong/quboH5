@@ -110,7 +110,7 @@ export default {
       code:'',
       passwordShow:true,
       //手机号，账号登录切换
-      navActive: 1,
+      navActive: 2,
       //清除表单错误提示
       formKey: 0,
       // 密码显示与隐藏

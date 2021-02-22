@@ -116,6 +116,7 @@ export default {
                 }                             
               } else if (res.data.code == -1) {
                   this.$toast(res.data.msg);
+                  window.location.href = this.JuheHOST
               }
           })
           .catch(error => {

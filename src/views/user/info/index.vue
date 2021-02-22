@@ -143,7 +143,7 @@ export default {
                     this.$toast({
                         message: "登录过期请重新登录"
                     });
-                    // window.location.href = this.JuheHOST
+                    window.location.href = this.JuheHOST
                 }
         })
         .catch(error => {

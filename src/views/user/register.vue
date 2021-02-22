@@ -53,7 +53,7 @@
           </van-field>
           
           <van-checkbox class="agree-service" v-model="checked" disabled shape="square">
-            已阅读并同意 <a>《电竞用户协议》</a>
+            已阅读并同意 <a @click="toagreement">《电竞用户协议》</a>
             <template #icon="props">
               <img class="img-icon" :src="props.checked ? activeIcon : inactiveIcon" />
             </template>
@@ -183,6 +183,9 @@ export default {
       .catch(error => {
         this.$toast("服务器响应错误，注册失败")
       })
+    },
+    toagreement(){
+      this.$router.push('./agreement')
     }
   },
   mounted(){

@@ -66,12 +66,7 @@ export default {
                     }
                     this.articleList = receiveList;
                 } else if (res.data.code == -1) {
-                    // this.$message({
-                    //     type: 'success', // warning、success
-                    //     message: res.data.msg 
-                    // })
-                    // this.$router.push("/")
-                    // window.location.href = this.JuheHOST 
+                    window.location.href = this.JuheHOST 
                 }
             })
             .catch(error => {
