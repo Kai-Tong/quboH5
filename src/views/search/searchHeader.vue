@@ -36,7 +36,7 @@
         <div
           v-for="(item, index) in searchTypeList"
           :key="index"
-          @click="changeSearchType(item,index)"
+          @click="changeSearchType(item, index)"
         >
           {{ item.name }}
         </div>
@@ -78,9 +78,13 @@ export default {
     },
     gotosearch() {
       // 搜索查询
-      this.storage();
-      this.$emit("childKeywords", this.searchkeywordk);
-      this.$router.push("/searchresult");
+      if (this.$route.name != "Searchresult") {
+        this.$router.push("/searchresult");
+      } else {
+        this.storage();
+        this.$emit("childKeywords", this.searchkeywordk);
+      }
+      sessionStorage.setItem("searchinput", this.searchkeywordk);
     },
     storage() {
       let KW = localStorage.getItem("searchHistory");
@@ -103,12 +107,12 @@ export default {
       //显示搜索类型
       this.showsearchtyoeList = !this.showsearchtyoeList;
     },
-    changeSearchType(type,index) {
+    changeSearchType(type, index) {
       //切换搜索类型
       this.showsearchtyoeList = false;
       this.searchType = type.name;
       this.$emit("childIndex", type.name);
-      sessionStorage.setItem("searchtype",index);
+      sessionStorage.setItem("searchtype", index);
     },
   },
   created() {
@@ -121,7 +125,6 @@ export default {
           this.searchType = item.name;
         }
       });
-
       if (searchinput != null && searchinput.length > 0) {
         this.searchkeywordk = searchinput;
       }

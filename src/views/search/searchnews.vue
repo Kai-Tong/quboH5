@@ -50,6 +50,7 @@ export default {
     },
     searchdata() {
       //搜索新闻
+      console.log(this.keywords, 123);
       this.$api.homeindex
         .search({
           search_type: 1,
@@ -87,10 +88,14 @@ export default {
   watch: {
     fatherkeywordsFn(newValue) {
       this.keywords = newValue;
-      console.log(this.keywords);
+      this.searchdata();
     },
   },
   created() {
+    let searchinput = sessionStorage.getItem("searchinput");
+    if (searchinput != null && searchinput.length > 0) {
+      this.keywords = searchinput;
+    }
     this.searchdata();
   },
   mounted() {

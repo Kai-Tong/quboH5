@@ -110,9 +110,14 @@ export default {
     fatherkeywordsFn(newValue) {
       this.keywords = newValue;
       console.log(this.keywords);
+      this.searchdata();
     },
   },
   created() {
+    let searchinput = sessionStorage.getItem("searchinput");
+    if (searchinput != null && searchinput.length > 0) {
+      this.keywords = searchinput;
+    }
     this.searchdata();
   },
 };
