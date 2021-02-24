@@ -47,7 +47,7 @@
 
 <script>
 export default {
-  props: ["fatherindex"],
+  props: ["fatherindex", "fatherkeywords"],
   data() {
     return {
       backimg: require("../../assets/img/search/back@2x.png"),
@@ -79,9 +79,9 @@ export default {
     gotosearch() {
       // 搜索查询
       if (this.$route.name != "Searchresult") {
+        this.storage();
         this.$router.push("/searchresult");
       } else {
-        this.storage();
         this.$emit("childKeywords", this.searchkeywordk);
       }
       sessionStorage.setItem("searchinput", this.searchkeywordk);
@@ -95,11 +95,13 @@ export default {
           KWdata = JSON.parse(KW);
           KWdata.unshift(this.searchkeywordk);
           this.historyList = KWdata;
-          localStorage.setItem("searchHistory", JSON.stringify(KWdata));
+          let newsList = [...new Set(KWdata)];
+          localStorage.setItem("searchHistory", JSON.stringify(newsList));
         } else {
           KWdata.push(this.searchkeywordk);
           this.historyList = KWdata;
-          localStorage.setItem("searchHistory", JSON.stringify(KWdata));
+           let newsList = [...new Set(KWdata)];
+          localStorage.setItem("searchHistory", JSON.stringify(newsList));
         }
       }
     },
@@ -125,14 +127,17 @@ export default {
           this.searchType = item.name;
         }
       });
-      if (searchinput != null && searchinput.length > 0) {
-        this.searchkeywordk = searchinput;
-      }
+    }
+    if (searchinput != null && searchinput.length > 0) {
+      this.searchkeywordk = searchinput;
     }
   },
   computed: {
     fatherindexfn() {
       return this.fatherindex;
+    },
+    fatherkeywordsfn() {
+      return this.fatherkeywords;
     },
   },
   watch: {
@@ -142,6 +147,9 @@ export default {
           this.searchType = item.name;
         }
       });
+    },
+    fatherkeywordsfn(newValue) {
+      this.searchkeywordk = newValue;
     },
   },
 };

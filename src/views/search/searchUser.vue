@@ -22,6 +22,7 @@
         {{ item.is_followed == 0 ? "关注" : "已关注" }}
       </div>
     </div>
+    <div v-show="searchList == false" class="none1">暂无用户</div>
   </div>
 </template>
 
@@ -145,7 +146,9 @@ export default {
 
 <style lang="less" scoped>
 @import url("../../assets/css/commonuse");
-
+.none1 {
+  text-align: center;
+}
 .searchnews_data {
   border-bottom: 1px solid #d8d8d8;
   padding: 30px;

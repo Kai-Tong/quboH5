@@ -1,6 +1,7 @@
 <template>
   <div id="search">
     <searchHeader
+      :fatherkeywords="Keywords"
       @childKeywords="getChildKeywords"
     ></searchHeader>
     <div class="history_record cl">
@@ -16,7 +17,7 @@
       <div
         v-for="(item, index) in historyList"
         :key="index + item"
-        @click="historySearch()"
+        @click="historySearch(item)"
       >
         {{ item }}
       </div>
@@ -30,20 +31,16 @@ export default {
   data() {
     return {
       historyList: [],
+      Keywords:""
     };
   },
   methods: {
-    historySearch() {
+    historySearch(item) {
       //历史记录搜索
+      sessionStorage.setItem("searchinput",item);
+      this.getChildKeywords(item)
+      this.Keywords = item
     },
-    // getChildIndex(name) {
-    //   //接受子组件传过来的值
-    //   this.searchMenuList.map((item, index) => {
-    //     if (item.name == name) {
-          
-    //     }
-    //   });
-    // },
     deleteHistory() {
       //删除历史搜索记录
       localStorage.removeItem("searchHistory");
