@@ -91,9 +91,19 @@ export default {
               this.searchList = pipi;
             }
           } else {
-            this.$toast({
-              message: msg,
-            });
+            if (msg == "token过期") {
+              this.$toast({
+                message: "请重新登录",
+              });
+            } else if (msg == "token无效") {
+              this.$toast({
+                message: "请先登录",
+              });
+            } else {
+              this.$toast({
+                message: msg,
+              });
+            }
           }
         });
     },

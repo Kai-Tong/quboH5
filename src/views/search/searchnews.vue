@@ -48,7 +48,7 @@ export default {
   methods: {
     gotoNews(item) {
       //跳转新闻详情页面
-      let url = `http://m.qubodianjing.com/news/${item.ch_columnm_key}/${item.ch_key}/${item.id}.html`
+      let url = `http://m.qubodianjing.com/news/${item.ch_columnm_key}/${item.ch_key}/${item.id}.html`;
       window.location.href = url;
     },
     searchdata() {
@@ -76,9 +76,19 @@ export default {
               this.searchList = pipi;
             }
           } else {
-            this.$toast({
-              message: msg,
-            });
+            if (msg == "token过期") {
+              this.$toast({
+                message: "请重新登录",
+              });
+            } else if (msg == "token无效") {
+              this.$toast({
+                message: "请先登录",
+              });
+            } else {
+              this.$toast({
+                message: msg,
+              });
+            }
           }
         });
     },
