@@ -53,44 +53,49 @@ export default {
     },
     searchdata() {
       //搜索新闻
-      console.log(this.keywords, 123);
-      this.$api.homeindex
-        .search({
-          search_type: 1,
-          keywords: this.keywords,
-          order: 1,
-          p: this.page,
-        })
-        .then((res) => {
-          let { code, msg, params } = res.data;
-          let { data, pagination } = params;
-          if (code == 0) {
-            let { page_size, total } = pagination;
-            let pagesize = Math.ceil(total / page_size);
-            this.pagesize = pagesize;
-            if (this.page == 1) {
-              this.searchList = data;
+      if (this.keywords != "") {
+        this.$api.homeindex
+          .search({
+            search_type: 1,
+            keywords: this.keywords,
+            order: 1,
+            p: this.page,
+          })
+          .then((res) => {
+            let { code, msg, params } = res.data;
+            let { data, pagination } = params;
+            if (code == 0) {
+              let { page_size, total } = pagination;
+              let pagesize = Math.ceil(total / page_size);
+              this.pagesize = pagesize;
+              if (this.page == 1) {
+                this.searchList = data;
+              } else {
+                let List = this.searchList;
+                let pipi = List.concat(data);
+                this.searchList = pipi;
+              }
             } else {
-              let List = this.searchList;
-              let pipi = List.concat(data);
-              this.searchList = pipi;
+              if (msg == "token过期") {
+                this.$toast({
+                  message: "请重新登录",
+                });
+              } else if (msg == "token无效") {
+                this.$toast({
+                  message: "请先登录",
+                });
+              } else {
+                this.$toast({
+                  message: msg,
+                });
+              }
             }
-          } else {
-            if (msg == "token过期") {
-              this.$toast({
-                message: "请重新登录",
-              });
-            } else if (msg == "token无效") {
-              this.$toast({
-                message: "请先登录",
-              });
-            } else {
-              this.$toast({
-                message: msg,
-              });
-            }
-          }
+          });
+      } else {
+        this.$toast({
+          message: "请输入关键字",
         });
+      }
     },
   },
   computed: {
