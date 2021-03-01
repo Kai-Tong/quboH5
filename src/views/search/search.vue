@@ -43,6 +43,7 @@ export default {
     },
     deleteHistory() {
       //删除历史搜索记录
+      this.historyList = []
       localStorage.removeItem("searchHistory");
     },
     getChildKeywords(keywords) {
