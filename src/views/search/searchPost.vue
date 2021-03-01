@@ -4,7 +4,7 @@
       class="searchnews_data"
       v-for="(item, index) in searchList"
       :key="index"
-      @click="gotoNews()"
+      @click="gotoNews(item)"
     >
       <div class="forum_owner">
         {{ item.forum_owner }}
@@ -43,8 +43,10 @@ export default {
     };
   },
   methods: {
-    gotoNews() {
+    gotoNews(item) {
       //跳转新闻详情页面
+      let url = `http://m.qubodianjing.com/forum/${item.ch_columnm_key}/${item.ch_key}/${item.id}.html`;
+      window.location.href = url;
     },
     searchdata() {
       //搜索新闻
@@ -126,7 +128,7 @@ export default {
 
 <style lang="less" scoped>
 @import url("../../assets/css/commonuse");
-.none1{
+.none1 {
   text-align: center;
 }
 .searchnews_data {
