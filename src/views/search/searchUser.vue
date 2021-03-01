@@ -4,7 +4,7 @@
       class="searchnews_data"
       v-for="(item, index) in searchList"
       :key="index"
-      @click="gotoNews()"
+      @click="gotoNews(item.id)"
     >
       <div class="user_pic">
         <img
@@ -63,8 +63,9 @@ export default {
         }
       });
     },
-    gotoNews() {
-      //跳转新闻详情页面
+    gotoNews(value) {
+      //跳转新闻详情页面  userinfo
+      this.$router.push({ name: "userinfo", params: { user_uid: value } });
     },
     searchdata() {
       //搜索新闻
