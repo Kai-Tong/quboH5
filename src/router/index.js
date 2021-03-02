@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
 Vue.use(VueRouter)
 
   const routes = [
@@ -13,14 +12,14 @@ Vue.use(VueRouter)
     path: '/login',
     name: 'Login',
     components: {
-        default: () => import(/* webpackChunkName: "Login" */ '../views/user/login.vue')
+        default: () => import(/* webpackChunkName: "Login" */ '../views/users/login.vue')
     }
   }, 
   {
       path: '/register',
       name: 'Register',
       components: {
-          default: () => import(/* webpackChunkName: "Register" */ '../views/user/register.vue')
+          default: () => import(/* webpackChunkName: "Register" */ '../views/users/register.vue')
       }
   },
   //找回密码
@@ -39,7 +38,7 @@ Vue.use(VueRouter)
       path: '/mine',
       name: 'Mine',
       components: {
-          default: () => import(/* webpackChunkName: "Register" */ '../views/user/mine.vue')
+          default: () => import(/* webpackChunkName: "Register" */ '../views/users/mine.vue')
       },
       meta: {
         requireAuth: true
@@ -50,7 +49,7 @@ Vue.use(VueRouter)
     path: '/avatar',
     name: 'Avatar',
     components: {
-        default: () => import(/* webpackChunkName: "Avatar" */ '../views/user/avatar.vue')
+        default: () => import(/* webpackChunkName: "Avatar" */ '../views/users/avatar.vue')
     },
     meta: {
       requireAuth: true
@@ -144,7 +143,7 @@ Vue.use(VueRouter)
     path: '/userinfo/:user_uid',
     name: 'userinfo',
     components: {
-        default: () => import(/* webpackChunkName: "UserInfo" */ '../views/user/info/index.vue')
+        default: () => import(/* webpackChunkName: "UserInfo" */ '../views/users/info/index.vue')
     },
     meta: {
       requireAuth: true

@@ -56,7 +56,7 @@ export default {
   data () {
     return {
       current:"https://img01.yzcdn.cn/vant/tree.jpg",
-      navActive: 2,
+      navActive: 3,
       isme:'',
       flag:'',//关注1,取消关注2
       profile:{},
@@ -151,7 +151,7 @@ export default {
         });
     },
     goBack(){
-        this.$router.push('/mine')
+        this.$router.go(-1)
     }
   },
   mounted(){

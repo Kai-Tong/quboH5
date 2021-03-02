@@ -97,7 +97,7 @@ export default {
                     });
                 } else if (res.data.code == 0) {
                     this.$toast({
-                        message: res.data.msg
+                        message: "取消关注成功"
                     });
                     this.getAttention()              
                 } else if (res.data.code == -1) {

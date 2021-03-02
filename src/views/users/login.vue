@@ -74,9 +74,9 @@
               <img class="img-icon" :src="props.checked ? activeIcon : inactiveIcon" />
             </template>
           </van-checkbox>
-          <p class="reg-left">找回密码 / <a href="./register" class="register-href">注册账户</a></p>
+          <p class="reg-left"><span @click="tofindpass">找回密码</span> / <a href="./register" class="register-href">注册账户</a></p>
         </div>
-        <div class="other-login">
+        <!-- <div class="other-login">
           <p>其他登录方式</p>
           <ul class="flex-between">
             <li
@@ -88,7 +88,7 @@
               <span>{{ item.txt }}</span>
             </li>
           </ul>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -136,6 +136,9 @@ export default {
     }
   },
   methods: {
+    tofindpass(){
+      this.$router.push('/retrievepwd')
+    },
     checkedchange(value){
       console.log(value);
     },
@@ -225,7 +228,7 @@ export default {
         ).then(res => {
             console.log(res);
             if (res.data.code == 1) {
-                this.$message({
+                this.$toast({
                   type: 'error', // warning、success
                   message: res.data.msg 
                 }) 
@@ -486,5 +489,8 @@ export default {
   right: 3px; 
   top: 5px !important;
   // background: none !important;
+}
+.van-toast{
+  width: 300px;
 }
 </style>

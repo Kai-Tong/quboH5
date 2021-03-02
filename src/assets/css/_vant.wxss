@@ -5,10 +5,8 @@
   height: 60px;
 }
 .van-cell {
-  /* padding: 1rem;
-  line-height: 40px; */
-  padding: 10px 16px;
-  line-height: 24px;
+  padding: 1rem;
+  line-height: 40px;
 }
 .van-cell .van-cell__title {
   text-align: left;
@@ -44,6 +42,7 @@
 }
 .van-toast--html,
 .van-toast--text {
-  padding: 15px;
+  padding: 25px;
   box-sizing: border-box;
+  background-color: #444141;
 }

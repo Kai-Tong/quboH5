@@ -53,12 +53,12 @@
         @change="onEditorChange($event)">
       </quill-editor>
       <div class="imgup" v-show="false" >
-        <van-uploader :afterRead="afterRead" :beforeRead="beforeRead">
+        <van-uploader :after-read="afterRead" :beforeRead="beforeRead">
           <van-button icon="photo" type="primary">上传图片</van-button>
         </van-uploader>
       </div>
       <div class="videoup" v-show="false" >
-        <van-uploader :afterRead="afterReadvideo" accept="video/*" :beforeRead="beforeReadvideo">
+        <van-uploader :after-read="afterReadvideo" accept="video/*" :beforeRead="beforeReadvideo">
           <van-button icon="photo" type="primary">上传视频</van-button>
         </van-uploader>
       </div>
@@ -205,13 +205,14 @@ export default {
       },
       // 视频上传前
       beforeReadvideo(file){
-        const isLt10M = file.size / 1024 / 1024  < 10;
+        const isLt10M = file.size / 1024 / 1024  < 1;
         if (['video/mp4', 'video/ogg', 'video/flv','video/avi','video/wmv','video/rmvb'].indexOf(file.type) == -1) {
             this.$toast('请上传正确的视频格式');
             return false;
         }
+        console.log(file.size / 1024 / 1024);
         if (!isLt10M) {
-            this.$toast('上传视频大小不能超过10MB哦!');
+            this.$toast('上传视频大小不能超过1MB哦!');
             return false;
         }
         let loading = this.$toast.loading({
@@ -227,18 +228,19 @@ export default {
             method:'post',
             data:formData,
             headers: {
-                'mediaType': 'multipart/form-data',
+                'content-type': 'multipart/form-data',
                 'token' :this.token
             },
             timeout:3000
         })
         .then(res => {
-            console.log(res);
+            // console.log(res);
             // formData = null;
             // formData = new FormData();
             // this.$refs.upload.clearFiles(); 
             if (res.data.code == 1) {
-
+              console.log(res);
+              loading.clear();
             } else if (res.status == 200) {
               this.video_src = res.data.data[0];
               // // 获取光标所在位置
@@ -249,16 +251,114 @@ export default {
               // this.editor.setSelection(length + 1);
               loading.clear();
             } else if (res.data.code == -1) {
-
+              console.log(res);
+              window.location.href = this.JuheHOST
+              loading.clear();
             }
         })
         .catch(error => {
             console.log(error);
         })
       },
+      //将base64转换为文件
+      dataURLtoFile(dataurl,file) {
+          var arr = dataurl.split(','),
+              bstr = atob(arr[1]),
+              n = bstr.length,
+              u8arr = new Uint8Array(n)
+          while (n--) {
+              u8arr[n] = bstr.charCodeAt(n)
+          }
+          return new File([u8arr], file.name, {
+              type: file.type
+          })
+      },
       //图片上传成功
       afterRead(file) {
-        console.log("上传成功", file);
+        console.log(file);
+        let loading = this.$toast.loading({
+          duration: 0,
+          mask: false,
+          forbidClick: true,
+          message: "上传中..."
+        });
+        var formData = new FormData(); //构造一个 FormData，把后台需要发送的参数添加
+        if(file.file.size  / 1024 / 1024 > 2){  //大于2M的图片压缩
+            let canvas = document.createElement('canvas') // 创建Canvas对象(画布)
+            let context = canvas.getContext('2d')
+            let img = new Image()
+            img.src = file.content // 指定图片的DataURL(图片的base64编码数据)
+            // console.log(img.src)
+            img.onload = () =>{ //固定宽高
+                canvas.width = 400 
+                canvas.height = 300
+                context.drawImage(img, 0, 0, 400, 300)
+                file.content = canvas.toDataURL(file.file.type, 0.92) // 0.92为默认压缩质量
+                let files = this.dataURLtoFile(file.content, file.file.name)
+                formData.append('file[]', files);
+                console.log(files);
+                this.$axios({
+                    url:this.$api.upimg,
+                    method:'post',
+                    data:formData,
+                    headers: {
+                        'content-type': 'multipart/form-data',
+                        'token' :this.token
+                    },
+                    timeout:3000
+                })
+                .then(res => {
+                    console.log(res);
+                    if (res.data.code == 1) {
+
+                    } else if (res.status == 200) {
+                      // 获取光标所在位置
+                      let length = this.editor.getSelection().index;
+                      // // 插入图片
+                      this.editor.insertEmbed(length, "image", res.data.data[0]);
+                      // // 调整光标到最后
+                      this.editor.setSelection(length + 1);
+                      loading.clear();
+                    } else if (res.data.code == -1) {
+
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+            }
+        }else{
+          formData.append("file[]", file.file);
+          this.$axios({
+              url:this.$api.upimg,
+              method:'post',
+              data:formData,
+              headers: {
+                  'content-type': 'multipart/form-data',
+                  'token' :this.token
+              },
+              timeout:3000
+          })
+          .then(res => {
+              console.log(res);
+              if (res.data.code == 1) {
+
+              } else if (res.status == 200) {
+                // 获取光标所在位置
+                let length = this.editor.getSelection().index;
+                // // 插入图片
+                this.editor.insertEmbed(length, "image", res.data.data[0]);
+                // // 调整光标到最后
+                this.editor.setSelection(length + 1);
+                loading.clear();
+              } else if (res.data.code == -1) {
+
+              }
+          })
+          .catch(error => {
+              console.log(error);
+          })
+        }
       },
       //图片上传前
       beforeRead(file) {
@@ -270,46 +370,8 @@ export default {
           this.$toast("请上传 jpg,jpeg,png 格式图片");
           return false;
         }
-        let loading = this.$toast.loading({
-          duration: 0,
-          mask: false,
-          forbidClick: true,
-          message: "上传中..."
-        });
-        let formData = new FormData();
-        formData.append("file[]", file);
-        this.$axios({
-            url:this.$api.upimg,
-            method:'post',
-            data:formData,
-            headers: {
-                'mediaType': 'multipart/form-data',
-                'token' :this.token
-            },
-            timeout:3000
-        })
-        .then(res => {
-            console.log(res);
-            // formData = null;
-            // formData = new FormData();
-            // this.$refs.upload.clearFiles(); 
-            if (res.data.code == 1) {
-
-            } else if (res.status == 200) {
-              // 获取光标所在位置
-              let length = this.editor.getSelection().index;
-              // // 插入图片
-              this.editor.insertEmbed(length, "image", res.data.data[0]);
-              // // 调整光标到最后
-              this.editor.setSelection(length + 1);
-              loading.clear();
-            } else if (res.data.code == -1) {
-
-            }
-        })
-        .catch(error => {
-            console.log(error);
-        })
+        return true;
+        
       },
       //发布帖子
       publishPost() {

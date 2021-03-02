@@ -2,12 +2,12 @@
     <div class="safe-content">
       <Header />
         <van-cell-group>
-            <van-cell title="登录密码" value="去修改" icon="password" is-link url="/password" />
-            <van-cell title="修改手机" value="去修改" icon="mobile" is-link url="/modifyPhone" />
-            <van-cell title="邮箱验证" value="未绑定" v-if="!infoList.user_email" icon="email" is-link url="/email" />
-            <van-cell title="邮箱验证" :value="infoList.user_email" v-else icon="email" is-link url="/email" />
-            <van-cell title="身份验证" value="未实名" v-if="!infoList.user_id" icon="user" is-link url="/auth" />
-            <van-cell title="身份验证" value="已实名" v-else icon="user" is-link url="/auth" />
+            <van-cell title="登录密码" value="去修改" icon="password" is-link @click="gopassword"/>
+            <van-cell title="修改手机" value="去修改" icon="mobile" is-link @click="gomodifyPhone"/>
+            <van-cell title="邮箱验证" value="未绑定" v-if="!infoList.user_email" icon="email" @click="goemail" is-link />
+            <van-cell title="邮箱验证" :value="infoList.user_email" v-else icon="email" is-link @click="goemail" />
+            <van-cell title="身份验证" value="未实名" v-if="!infoList.user_id" icon="user"  @click="goauth" is-link />
+            <van-cell title="身份验证" value="已实名" v-else icon="user" />
         </van-cell-group>
     </div>
 </template>
@@ -46,6 +46,18 @@ export default {
           .catch(error => {
               this.$toast("服务器响应失败，请稍后~");
           })
+      },
+      gopassword(){
+        this.$router.push('/password')
+      },
+      gomodifyPhone(){
+        this.$router.push('/modifyPhone')
+      },
+      goemail(){
+        this.$router.push('/email')
+      },
+      goauth(){
+        this.$router.push('/auth')
       }
   },
   mounted(){

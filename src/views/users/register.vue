@@ -1,7 +1,8 @@
 <template>
     <div class="login-content">
+      <div class="logodiv">
         <img class="logo" src="../../assets/img/user/logo@2x.png" alt="">
-
+      </div>
         <img class="code-login" src="../../assets/img/user/zc@2x.png" />
 
         <van-form @submit="onSubmit">
@@ -175,7 +176,8 @@ export default {
           } else if (res.data.code == 0) {
               this.$toast({
                 message: '注册成功，请登录！'
-              })                           
+              })
+              this.$router.push('/login')                           
           } else if (res.data.code == -1) {
 
           }
@@ -195,25 +197,30 @@ export default {
 </script>
 <style lang="less" scope>
 .login-content {
-  background: url('../../assets/img/user/login-bg.png') no-repeat top left 100%;
+  background: url('../../assets/img/user/login-bg.png') no-repeat;
   color: rgb(172,172,172);
   width: 100%;
   height: 100%;
-  padding-top: 66px;
+  position: absolute;
+  top: 0;
   box-sizing: border-box;
   text-align: center;
   .logo, .code-login {
     margin: auto;
     display: block;
   }
+  .logodiv{
+    margin-top: 66px;
+  }
   .logo {
     width: 150px;
     height: 150px;
+    
   }
   .code-login {
     height: 35px;
     width: 74px;
-    padding: 66px 74px 0;
+    margin: 20px auto;
   }
   .van-form {
     margin-top: 30px;
@@ -238,6 +245,7 @@ export default {
     background-color: transparent;
     height: 106px;
     padding: 1rem 10px;
+    box-sizing: border-box;
     .van-field__label {
       color: #acacac;
       padding-left: 0;

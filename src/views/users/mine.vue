@@ -2,7 +2,7 @@
   <div class="base-content">
       <div class="header">
           <p>
-
+              <van-icon name="back" class="back-icon" @click="goBack" />
           </p>
           <a href="./avatar"><img class="avatar" :src="avatar || current" alt=""></a>
           <p class="name">
@@ -11,34 +11,32 @@
           </p>
           <span>用户账号：{{username}}</span>
       </div>
-
-
         <van-cell-group>
-            <van-cell is-link url="/base">
+            <van-cell is-link @click="gobase">
                 <template #title>
                     <img class="list-icon" src="../../assets/img/user/grzl-icon@2x.png" alt="">
                     <span class="custom-title">个人资料</span>
                 </template>
             </van-cell>
-            <van-cell is-link url="/safe">
+            <van-cell is-link @click="gosafe">
                 <template #title>
                     <img class="list-icon" src="../../assets/img/user/aqzx-icon@2x.png" alt="">
                     <span class="custom-title">安全中心</span>
                 </template>
             </van-cell>
-            <van-cell is-link url="/privacyset">
+            <van-cell is-link @click="goprivacyset">
                 <template #title>
                     <img class="list-icon" src="../../assets/img/user/sz1@2x.png" alt="">
                     <span class="custom-title">隐私设置</span>
                 </template>
             </van-cell>
-            <van-cell is-link url="/aboutus">
+            <van-cell is-link @click="goaboutus">
                 <template #title>
                     <img class="list-icon" src="../../assets/img/user/gywm-icon@2x.png" alt="">
                     <span class="custom-title">关于我们</span>
                 </template>
             </van-cell>
-            <van-cell is-link url="/online">
+            <van-cell is-link @click="goonline">
                 <template #title>
                     <img class="list-icon" src="../../assets/img/user/zxkf-icon@2x.png" alt="">
                     <span class="custom-title">在线客服</span>
@@ -98,12 +96,30 @@ export default {
           this.$toast("参数错误");
         });
     },
+    gobase(){
+        this.$router.push('/base')
+    },
+    gosafe(){
+        this.$router.push('/safe')
+    },
+    goprivacyset(){
+        this.$router.push('/privacyset')
+    },
+    goaboutus(){
+        this.$router.push('/aboutus')
+    },
+    goonline(){
+        this.$router.push('/online')
+    },
     gouser(){
         let uid = localStorage.getItem("user_uid")
         this.$router.push({
             name: "userinfo",
             params: { user_uid: uid }
         });
+    },
+    goBack(){
+        window.location.href = this.JuheHOST
     }
   },
   mounted(){
@@ -132,18 +148,30 @@ export default {
 <style scoped lang="less">
 .base-content {
     width: 100%;
-    height: 100%;
+    height: calc(110%);
     background: #10151E url('../../assets/img/user/bg@2x.png') no-repeat top left;
-    background-size: 100% 100%;
+    background-size: 100% 110%;
+    position: absolute;
+    top: 0;
+    overflow: hidden;
     .header {
         background: #10151E url('../../assets/img/user/bg-header@2x.png') no-repeat top left;
         background-size: 100%;
         text-align: center;
         color: #fff;
-        padding-top: 68px;
         padding-bottom: 28px;
+        box-sizing: border-box;
         p {
             height: 50px;
+            .back-icon {
+                width: 35px;
+                height: 35px;
+                background: url('../../assets/img/icon/back.png') no-repeat center center;
+                background-size: 100%;
+                position: absolute;
+                top: 50px;
+                left: 40px;
+            }
         }
         .avatar {
             width: 132px;
@@ -176,6 +204,7 @@ export default {
     .van-cell-group {
         background-color: transparent;
         padding: 60px 30px;
+        box-sizing: border-box;
         &::after {
             border: 0;
         }
@@ -183,6 +212,7 @@ export default {
     .van-cell {
         background-color: transparent;
         padding: 1rem 20px;
+        box-sizing: border-box;
         background: url('../../assets/img/user/list-bg.png') no-repeat bottom left;
         background-size: 100%;
         &::after {

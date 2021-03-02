@@ -98,7 +98,7 @@ export default {
   }
 }
 </script>
-<style lang="less" scope>
+<style lang="less" scoped>
 .userinfo-base-content {
     padding: 50px;
     text-align: left;

@@ -26,7 +26,7 @@
             </van-popup>
             <!-- 生日 -->
             <van-field label="生日" :value="date" @click="show = true" />
-            <van-calendar v-model="show" @confirm="onbrithday" />
+            <van-calendar :min-date="minDate" v-model="show" @confirm="onbrithday" />
             <van-field label="星座" :value="constellation" readonly/>
             <!-- 地区 -->
             <van-field
@@ -95,6 +95,7 @@ export default {
       // 性别
       sex: '',
       columns: ['男', '女', '保密'],
+      minDate: new Date(1960, 0, 1),
       showPicker: false,
       // 生日
       date: '',
@@ -258,7 +259,7 @@ export default {
     .van-cell-group {
         width: 710px;
         margin: 30px auto;
-        box-shadow: 0 0 20px .3rem #eee;
+        // box-shadow: 0 0 20px .3rem #eee;
         padding: 20px 0;
     }
 }

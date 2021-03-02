@@ -44,7 +44,7 @@ export default {
   },
   props:["userpic"],
   methods: {
-    toPostDetail(){
+    toPostDetail(item){
         window.location.href = this.JuheHOST+ '/forum/' + item.ch_columnm_key + '/' + item.ch_key + '/' + item.forum_id + '.html'
     },
     //时间转换

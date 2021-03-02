@@ -9,7 +9,7 @@
             </div>
         </div>
 
-        <p class="user-name">用户名</p>
+        <p class="user-name">用户名:{{user_name}}</p>
         <span class="current-avatar">当前头像</span>
         <span class="blue-line"></span>
 
@@ -28,7 +28,7 @@
                     :key="key"
                     @click="current=item.userPic;currentIndex=key"
                 ><img :src="item.userPic" alt=""></span>
-                <van-uploader accept="image/*" :max-count="1" :after-read="afterRead" />
+                <van-uploader accept="image/*" :max-count="1" :after-read="afterRead" :beforeRead="beforeRead" />
             </div>
         </div>
         <!-- <van-button @click="submitHandle" type="primary">提  交</van-button> -->
@@ -50,6 +50,7 @@ export default {
             fileList: [],
             current:"https://img01.yzcdn.cn/vant/tree.jpg",
             userpic:localStorage.getItem("user_pic"),
+            user_name:localStorage.getItem("user_name"),
             actions: [{
                 name: '拍照',
                 method : this.openCamera
@@ -67,42 +68,101 @@ export default {
         goTo(v){
             this.$router.push("/mine")
         },
+        beforeRead(file){
+            // const isLt10M = file.size / 1024 / 1024  < 1;
+            // if (!isLt10M) {
+            // this.$toast('上传图片大小不能超过1MB哦!');
+            // return false;
+            // }
+            return true;
+        },
+        //将base64转换为文件
+        dataURLtoFile(dataurl,file) {
+            var arr = dataurl.split(','),
+                bstr = atob(arr[1]),
+                n = bstr.length,
+                u8arr = new Uint8Array(n)
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n)
+            }
+            return new File([u8arr], file.name, {
+                type: file.type
+            })
+        },
         afterRead(file){
-            console.log(file);//file文件如下图
-        　　var formData = new FormData(); //构造一个 FormData，把后台需要发送的参数添加
-            formData.append('file[]', file.file);
-            this.$axios({
-                url:this.$api.uploadActionUrl,
-                method:'post',
-                data:formData,
-                headers: {
-                    'mediaType': 'multipart/form-data',
-                    'token' :this.token
-                },
-                timeout:3000
-            })
-            .then(res => {
-                console.log(res);
-                // formData = null;
-                // formData = new FormData();
-                // this.$refs.upload.clearFiles(); 
-                if (res.data.code == 1) {
+            console.log(file);
+            let selectFile = file;
+            var formData = new FormData(); //构造一个 FormData，把后台需要发送的参数添加
+            if(file.file.size  / 1024 / 1024 > 2){  //大于2M的图片压缩
 
-                } else if (res.data.code == 0) {
-                 this.userpic = res.data.params.user_pic;
-                 localStorage.setItem("user_pic", res.data.params.user_pic);
-                } else if (res.data.code == -1) {
-                    window.location.href = this.JuheHOST
+                let canvas = document.createElement('canvas') // 创建Canvas对象(画布)
+                let context = canvas.getContext('2d')
+                let img = new Image()
+                img.src = file.content // 指定图片的DataURL(图片的base64编码数据)
+                // console.log(img.src)
+                img.onload = () =>{ //固定宽高
+                    canvas.width = 400 
+                    canvas.height = 300
+                    context.drawImage(img, 0, 0, 400, 300)
+                    file.content = canvas.toDataURL(file.file.type, 0.92) // 0.92为默认压缩质量
+                    let files = this.dataURLtoFile(file.content, file.file.name)
+                    formData.append('file[]', files);
+                    console.log(files);
+                    // this.imagePath.push(files)
+                    alert(files.size)
+                    this.$axios({
+                        url:this.$api.uploadActionUrl,
+                        method:'post',
+                        data:formData,
+                        headers: {
+                            'content-type': 'multipart/form-data',
+                            'token' :this.token
+                        },
+                        timeout:3000
+                    })
+                    .then(res => {
+                        console.log(res);
+                        if (res.data.code == 1) {
+
+                        } else if (res.data.code == 0) {
+                            this.userpic = res.data.params.user_pic;
+                            localStorage.setItem("user_pic", res.data.params.user_pic);
+                        } else if (res.data.code == -1) {
+                            window.location.href = this.JuheHOST
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
                 }
-            })
-            .catch(error => {
-                console.log(error);
-            }) 
-        // 　　this.$upload('/single/single/upload', formData).then(res => {//将formDate文件上传到阿里云服务器，会返回图片地址
-        // 　　　　console.log(res);
-        // 　　　　let str = res.response_data[0];
-        // 　　　　this.uploadImages.push(str);//将图片地址存入一个数组中
-        // 　　});
+            }else{
+                console.log(file);
+                formData.append('file[]', file.file);
+                this.$axios({
+                    url:this.$api.uploadActionUrl,
+                    method:'post',
+                    data:formData,
+                    headers: {
+                        'content-type': 'multipart/form-data',
+                        'token' :this.token
+                    },
+                    timeout:3000
+                })
+                .then(res => {
+                    console.log(res);
+                    if (res.data.code == 1) {
+
+                    } else if (res.data.code == 0) {
+                        this.userpic = res.data.params.user_pic;
+                        localStorage.setItem("user_pic", res.data.params.user_pic);
+                    } else if (res.data.code == -1) {
+                        window.location.href = this.JuheHOST
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+            }
         },
         getCamera() {
             this.$refs.file.click()
@@ -111,6 +171,9 @@ export default {
             this.$refs.camera.click()
         }
     },
+    mounted(){
+        console.log(11111);
+    }
 }
 </script>
 

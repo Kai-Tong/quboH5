@@ -52,7 +52,7 @@ export default {
     },
     //确认密码
     confirmpass(val){
-      if(val == this.password){
+      if(val == this.pass){
         return
       }else{
         return false
