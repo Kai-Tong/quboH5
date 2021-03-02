@@ -22,7 +22,11 @@ export default {
     methods: {
         goBack (v) {
             if (v) {
-                this.$router.push({ name: v })
+                if(v == 'forum'){
+                    window.location.href = "http://m.qubodianjing.com/forum"
+                }else{
+                    this.$router.push({ name: v })
+                }
             } else {
                 history.back(-1)
             }
@@ -58,7 +62,7 @@ export default {
         .share-icon {
             width: 35px;
             height: 35px;
-            background: url('../../assets/img/icon/share-icon2@2x.png') no-repeat center center;
+            background: url('../../assets/img/icon/zh@2x.png') no-repeat center center;
             background-size: 100%;
             margin-right: 20px;
         }

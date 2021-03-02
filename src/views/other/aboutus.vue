@@ -8,7 +8,7 @@
         </div>
         <div class="pic-group">
             <img src="../../assets/img/other/yhxy.png" alt="" @click="goAgreement">
-            <img src="../../assets/img/other/gghp.png" alt="" @click="appDownload">
+            <!-- <img src="../../assets/img/other/gghp.png" alt="" @click="appDownload"> -->
         </div>
     </div>
 </template>

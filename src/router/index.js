@@ -211,6 +211,7 @@ Vue.use(VueRouter)
     name: 'publish',
     meta: {
       title: '发表帖子',
+      back:'forum',
       requireAuth: true
     },
     component: () => import(/* webpackChunkName: "about" */ '../views/publish.vue')
