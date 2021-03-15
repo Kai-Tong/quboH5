@@ -73,6 +73,7 @@ export default {
   },
   methods: {
     gotoback() {
+      sessionStorage.removeItem("searchinput")
       //返回上一个页面
       window.history.go(-1);
     },
