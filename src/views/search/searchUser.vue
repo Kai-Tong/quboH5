@@ -143,6 +143,7 @@ export default {
         }
       }
     };
+    _this.searchdata();
   },
   watch: {
     fatherkeywordsFn(newValue) {
@@ -153,6 +154,7 @@ export default {
   },
   created() {
     let searchinput = sessionStorage.getItem("searchinput");
+    let searchtype = sessionStorage.getItem("searchtype");
     if (searchinput != null && searchinput.length > 0) {
       this.keywords = searchinput;
     }

@@ -53,7 +53,7 @@ export default {
     changeSearchMenu(index) {
       //菜单切换
       this.searchMenuClick = index;
-      switch (this.searchMenuClick) {
+      switch (index*=1) {
         case 0:
           this.searchComponent = "Searchnews";
           break;
@@ -78,13 +78,13 @@ export default {
     },
   },
   created() {
-    let searchtype = sessionStorage.getItem("searchtype")
-    let searchinput=  sessionStorage.getItem("searchinput")
-    if(searchtype!=null && searchtype.length>0){
-        this.changeSearchMenu(searchtype)
-        if(searchinput!=null && searchinput.length>0){
-          this.getChildKeywords(searchinput)
-        }
+    let searchtype = sessionStorage.getItem("searchtype");
+    let searchinput = sessionStorage.getItem("searchinput");
+    if (searchtype != null && searchtype.length > 0) {
+      this.changeSearchMenu(searchtype);
+      if (searchinput != null && searchinput.length > 0) {
+        this.getChildKeywords(searchinput);
+      }
     }
   },
   components: {
