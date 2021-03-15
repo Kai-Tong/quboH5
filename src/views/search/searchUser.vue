@@ -17,7 +17,7 @@
       </div>
       <div
         :class="item.is_followed == 0 ? 'is_followed1' : 'is_followed12'"
-        @click="user_follow(item)"
+        @click.stop="user_follow(item)"
       >
         {{ item.is_followed == 0 ? "关注" : "已关注" }}
       </div>
