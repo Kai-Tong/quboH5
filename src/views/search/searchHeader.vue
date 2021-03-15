@@ -80,11 +80,11 @@ export default {
     gotosearch() {
       // 搜索查询
       if (this.$route.name != "Searchresult") {
-        this.storage();
         this.$router.push("/searchresult");
       } else {
         this.$emit("childKeywords", this.searchkeywordk);
       }
+        this.storage();
       sessionStorage.setItem("searchinput", this.searchkeywordk);
     },
     storage() {
