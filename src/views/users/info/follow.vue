@@ -130,7 +130,7 @@ export default {
 <style lang="less" scope>
 .userinfo-follow-content {
     background: url('../../../assets/img/user/bg@2x.png') no-repeat top left;
-    background-size: 100%;
+    background-size: 100% 100%;
     // height: calc(100% - 560px);
     // overflow-y: auto;
     .lists {

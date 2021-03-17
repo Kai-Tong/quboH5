@@ -33,7 +33,7 @@
               v-model="area"
               rows="1"
               autosize
-              maxlength="20"
+              maxlength="16"
               show-word-limit
               label="地址"
               type="textarea"
@@ -60,7 +60,7 @@
               v-model="hobby"
               rows="1"
               autosize
-              maxlength="20"
+              maxlength="8"
               show-word-limit
               label="爱好"
               type="textarea"

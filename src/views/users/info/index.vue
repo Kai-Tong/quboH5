@@ -130,13 +130,16 @@ export default {
                         message: res.data.msg
                     });
                 } else if (res.data.code == 0) {
-                    this.$toast({
-                        message: "成功"
-                    });
                     if(this.flag == 1){
                         this.flag = 2
+                        this.$toast({
+                            message: "关注成功"
+                        });
                     }else if(this.flag == 2){
                         this.flag = 1
+                        this.$toast({
+                            message: "取消成功"
+                        });
                     }
                     // console.log(this.flag);                
                 } else if (res.data.code == -1) {
