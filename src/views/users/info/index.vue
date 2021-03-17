@@ -2,6 +2,7 @@
     <div class="userinfo-content">
         <header class="flex-between">
             <van-icon name="back" class="back-icon" @click="goBack" />
+            <van-icon name="wap-home-o" class="home-icon" @click="goHome" />
         </header>
         <div class="base-info">
             <div class="avatar-box">
@@ -155,6 +156,9 @@ export default {
     },
     goBack(){
         this.$router.go(-1)
+    },
+    goHome(){
+        window.location.href = this.JuheHOST
     }
   },
   mounted(){
@@ -186,6 +190,15 @@ export default {
             position: absolute;
             top: 50px;
             left: 20px;
+        }
+        .home-icon{
+            width: 35px;
+            height: 35px;
+            color: #e9e3e3;
+            font-size: 40px;
+            position: absolute;
+            top: 50px;
+            right: 20px;
         }
     }
     .base-info {
